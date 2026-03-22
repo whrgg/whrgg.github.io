@@ -170,24 +170,24 @@
 <h1 id="整体方案：文件分片"><a href="#整体方案：文件分片" class="headerlink" title="整体方案：文件分片"></a>整体方案：文件分片</h1><p>核心思路是：<strong>将大文件切分成多个小片段，逐片上传，最后在服务端合并还原</strong>。</p>
 <p>我们和前端约定，在上传文件的时候，将文件切片处理，传输的时候附带有文件的唯一标识，以及文件切片数，切片标识。</p>
 <p>在后端时，我们创建临时文件夹来存储临时切片，在前端传入的标识和切片总数达标的时候，开始在后端合并文件成整个文件，并删除临时文件夹。</p>
-<h2 id="整体流程"><a href="#整体流程" class="headerlink" title="整体流程"></a>整体流程</h2><pre class="mermaid">sequenceDiagram
+<h2 id="整体流程"><a href="#整体流程" class="headerlink" title="整体流程"></a>整体流程</h2><pre><code class="highlight mermaid">sequenceDiagram
     participant 前端
     participant 后端
-    前端->>前端: 1. 选择文件
-    前端->>前端: 2. 计算文件MD5（唯一标识）
-    前端->>前端: 3. 将文件切片（Blob.slice）
-    前端->>后端: 4. 检查文件是否已存在（秒传）
-    后端-->>前端: 返回：已存在 / 未存在 / 部分存在
-    前端->>前端: 5. 根据返回跳过已上传的分片
+    前端-&gt;&gt;前端: 1. 选择文件
+    前端-&gt;&gt;前端: 2. 计算文件MD5（唯一标识）
+    前端-&gt;&gt;前端: 3. 将文件切片（Blob.slice）
+    前端-&gt;&gt;后端: 4. 检查文件是否已存在（秒传）
+    后端--&gt;&gt;前端: 返回：已存在 / 未存在 / 部分存在
+    前端-&gt;&gt;前端: 5. 根据返回跳过已上传的分片
     loop 逐片上传
-        前端->>后端: 上传分片（携带hash、index、total）
-        后端->>后端: 接收分片，校验MD5，存入临时目录
-        后端-->>前端: 分片上传结果
+        前端-&gt;&gt;后端: 上传分片（携带hash、index、total）
+        后端-&gt;&gt;后端: 接收分片，校验MD5，存入临时目录
+        后端--&gt;&gt;前端: 分片上传结果
     end
-    前端->>后端: 6. 请求合并文件
-    后端->>后端: 7. 检查分片完整性，按顺序合并
-    后端->>后端: 8. 删除临时分片
-    后端-->>前端: 返回：上传成功，文件URL</pre>
+    前端-&gt;&gt;后端: 6. 请求合并文件
+    后端-&gt;&gt;后端: 7. 检查分片完整性，按顺序合并
+    后端-&gt;&gt;后端: 8. 删除临时分片
+    后端--&gt;&gt;前端: 返回：上传成功，文件URL</code></pre>
 
 <h2 id="前端实现"><a href="#前端实现" class="headerlink" title="前端实现"></a>前端实现</h2><h3 id="文件切片"><a href="#文件切片" class="headerlink" title="文件切片"></a>文件切片</h3><p>利用 <code>Blob.prototype.slice</code> 方法，可以将一个大文件按指定大小切成多个小块：</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 将文件按指定大小切片</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> &#123;<span class="type">File</span>&#125; <span class="variable">file</span> - 要切片的文件</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> &#123;<span class="type">number</span>&#125; <span class="variable">chunkSize</span> - 每片大小（字节），默认 5MB</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns</span> &#123;<span class="type">Array&lt;&#123;file: Blob, index: number</span>&#125;&gt;&#125; 切片数组</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">createChunks</span>(<span class="params">file, chunkSize = <span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> chunks = [];</span><br><span class="line">  <span class="keyword">let</span> cur = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">let</span> index = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">while</span> (cur &lt; file.<span class="property">size</span>) &#123;</span><br><span class="line">    chunks.<span class="title function_">push</span>(&#123;</span><br><span class="line">      <span class="attr">file</span>: file.<span class="title function_">slice</span>(cur, cur + chunkSize),</span><br><span class="line">      <span class="attr">index</span>: index++,</span><br><span class="line">    &#125;);</span><br><span class="line">    cur += chunkSize;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> chunks;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -244,14 +244,14 @@
 
 <h1 id="进阶优化"><a href="#进阶优化" class="headerlink" title="进阶优化"></a>进阶优化</h1><h2 id="确保文件的完整性"><a href="#确保文件的完整性" class="headerlink" title="确保文件的完整性"></a>确保文件的完整性</h2><p><strong>问题</strong>：网络传输过程中，分片数据可能因为网络抖动、丢包等原因发生损坏。</p>
 <p><strong>方案</strong>：前后端约定使用相同的加密算法，对分片的文件计算一个MD5值，前端传输增加MD5值，后端拿到文件之后也进行相同的计算，然后对比是否一致。</p>
-<pre class="mermaid">flowchart LR
-    A[前端：chunk数据] --> B[计算MD5]
-    B --> C[和chunk一起发送]
-    C --> D[后端：接收chunk]
-    D --> E[计算MD5]
-    E --> F{MD5对比}
-    F -->|一致| G[保存分片]
-    F -->|不一致| H[丢弃，通知前端重传]</pre>
+<pre><code class="highlight mermaid">flowchart LR
+    A[前端：chunk数据] --&gt; B[计算MD5]
+    B --&gt; C[和chunk一起发送]
+    C --&gt; D[后端：接收chunk]
+    D --&gt; E[计算MD5]
+    E --&gt; F&#123;MD5对比&#125;
+    F --&gt;|一致| G[保存分片]
+    F --&gt;|不一致| H[丢弃，通知前端重传]</code></pre>
 
 <p>前端计算单个分片MD5：</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">calculateChunkMd5</span>(<span class="params">chunkBlob</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> buffer = <span class="keyword">await</span> chunkBlob.<span class="title function_">arrayBuffer</span>();</span><br><span class="line">  <span class="keyword">const</span> spark = <span class="keyword">new</span> <span class="title class_">SparkMD5</span>.<span class="title class_">ArrayBuffer</span>();</span><br><span class="line">  spark.<span class="title function_">append</span>(buffer);</span><br><span class="line">  <span class="keyword">return</span> spark.<span class="title function_">end</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -267,14 +267,14 @@
 
 <h2 id="秒传"><a href="#秒传" class="headerlink" title="秒传"></a>秒传</h2><p><strong>场景</strong>：用户上传了一个视频文件，另一个用户再次上传同一个文件时，服务端已经有了，就没有必要真正传输。</p>
 <p><strong>原理</strong>：在上传之前，先计算整个文件的MD5值，发送给后端检查是否已存在。如果存在就直接返回成功，<strong>一个字节都不用传</strong>。</p>
-<pre class="mermaid">flowchart TD
-    A[用户选择文件] --> B[计算文件整体MD5]
-    B --> C[发送MD5给后端查询]
-    C --> D{文件是否已存在？}
-    D -->|已存在| E[直接返回URL（秒传完成）]
-    D -->|不存在| F[走正常分片上传流程]
-    E --> G[展示结果]
-    F --> G</pre>
+<pre><code class="highlight mermaid">flowchart TD
+    A[用户选择文件] --&gt; B[计算文件整体MD5]
+    B --&gt; C[发送MD5给后端查询]
+    C --&gt; D&#123;文件是否已存在？&#125;
+    D --&gt;|已存在| E[直接返回URL（秒传完成）]
+    D --&gt;|不存在| F[走正常分片上传流程]
+    E --&gt; G[展示结果]
+    F --&gt; G</code></pre>
 
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/upload/check&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">checkFile</span><span class="params">(<span class="meta">@RequestParam(&quot;hash&quot;)</span> String fileHash)</span> &#123;</span><br><span class="line">    <span class="comment">// 在数据库或文件系统中查找是否存在该hash对应的文件</span></span><br><span class="line">    <span class="type">FileRecord</span> <span class="variable">record</span> <span class="operator">=</span> fileService.findByHash(fileHash);</span><br><span class="line">    <span class="keyword">if</span> (record != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 秒传：文件已存在，直接返回访问地址</span></span><br><span class="line">        <span class="keyword">return</span> Result.success(<span class="string">&quot;秒传成功&quot;</span>, record.getUrl());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 文件不存在，需要正常上传</span></span><br><span class="line">    <span class="keyword">return</span> Result.success(<span class="string">&quot;文件不存在，请上传&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
