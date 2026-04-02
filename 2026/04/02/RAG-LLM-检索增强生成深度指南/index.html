@@ -1,0 +1,557 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>RAG：用检索增强生成打破大模型的知识局限 | 旅人</title><meta name="author" content="旅人"><meta name="copyright" content="旅人"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="RAG：用检索增强生成打破大模型的知识局限如果你曾用 ChatGPT 问过一个它训练数据之外的问题，或者需要它根据你的专业文档生成答案，你可能就遇到了大模型的两大”绝症”：知识过时 和 幻觉问题。 RAG（Retrieval-Augmented Generation）就是为解决这些问题而生的技术方案。它不是重新训练模型，而是聪明地把 LLM 变成一个”可查阅资料的专家”。  为什么需要 RAG？大">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RAG：用检索增强生成打破大模型的知识局限">
+<meta property="og:url" content="https://lvren.xyz/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="旅人">
+<meta property="og:description" content="RAG：用检索增强生成打破大模型的知识局限如果你曾用 ChatGPT 问过一个它训练数据之外的问题，或者需要它根据你的专业文档生成答案，你可能就遇到了大模型的两大”绝症”：知识过时 和 幻觉问题。 RAG（Retrieval-Augmented Generation）就是为解决这些问题而生的技术方案。它不是重新训练模型，而是聪明地把 LLM 变成一个”可查阅资料的专家”。  为什么需要 RAG？大">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q1.qlogo.cn/g?b=qq&nk=2186840198&s=640">
+<meta property="article:published_time" content="2026-04-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-02T07:47:22.771Z">
+<meta property="article:author" content="旅人">
+<meta property="article:tag" content="RAG">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="向量数据库">
+<meta property="article:tag" content="检索增强">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q1.qlogo.cn/g?b=qq&nk=2186840198&s=640"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "RAG：用检索增强生成打破大模型的知识局限",
+  "url": "https://lvren.xyz/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/",
+  "image": "https://q1.qlogo.cn/g?b=qq&nk=2186840198&s=640",
+  "datePublished": "2026-04-01T16:00:00.000Z",
+  "dateModified": "2026-04-02T07:47:22.771Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "旅人",
+      "url": "https://lvren.xyz/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/B2FDB3678D6ADE4257B261B0D08160C0.gif"><link rel="canonical" href="https://lvren.xyz/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'RAG：用检索增强生成打破大模型的知识局限',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于作者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/B2FDB3678D6ADE4257B261B0D08160C0.gif" alt="Logo"></a><a class="nav-page-title" href="/"><span class="site-name">RAG：用检索增强生成打破大模型的知识局限</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于作者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">RAG：用检索增强生成打破大模型的知识局限</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-01T16:00:00.000Z" title="发表于 2026-04-02 00:00:00">2026-04-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-02T07:47:22.771Z" title="更新于 2026-04-02 15:47:22">2026-04-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AI-LLM/">AI/LLM</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="RAG：用检索增强生成打破大模型的知识局限"><a href="#RAG：用检索增强生成打破大模型的知识局限" class="headerlink" title="RAG：用检索增强生成打破大模型的知识局限"></a>RAG：用检索增强生成打破大模型的知识局限</h1><p>如果你曾用 ChatGPT 问过一个它训练数据之外的问题，或者需要它根据你的专业文档生成答案，你可能就遇到了大模型的两大”绝症”：<strong>知识过时</strong> 和 <strong>幻觉问题</strong>。</p>
+<p>RAG（Retrieval-Augmented Generation）就是为解决这些问题而生的技术方案。它不是重新训练模型，而是聪明地把 LLM 变成一个”可查阅资料的专家”。</p>
+<hr>
+<h2 id="为什么需要-RAG？"><a href="#为什么需要-RAG？" class="headerlink" title="为什么需要 RAG？"></a>为什么需要 RAG？</h2><h3 id="大模型的四大痛点"><a href="#大模型的四大痛点" class="headerlink" title="大模型的四大痛点"></a>大模型的四大痛点</h3><ol>
+<li>静态知识库 - 训练数据有截止日期</li>
+<li>幻觉问题 - 编造看起来真实的回答</li>
+<li>领域局限 - 专业知识覆盖不完整</li>
+<li>数据泄露 - 可能泄露训练数据信息</li>
+</ol>
+<p><strong>RAG 的核心价值</strong>：</p>
+<ul>
+<li>减少幻觉，提高答案准确性</li>
+<li>增加实时性，快速适配新数据</li>
+<li>扩展领域知识，支持专业应用</li>
+<li>降低数据泄露风险（配合私有部署）</li>
+</ul>
+<hr>
+<h2 id="RAG-的完整流程"><a href="#RAG-的完整流程" class="headerlink" title="RAG 的完整流程"></a>RAG 的完整流程</h2><pre><code class="highlight mermaid">graph LR
+    A[&quot;文档输入&lt;br/&gt;PDF/Word/Excel&lt;br/&gt;txt等&quot;]
+    B[&quot;文本分块&lt;br/&gt;切分策略&quot;]
+    C[&quot;Embedding&lt;br/&gt;向量化&quot;]
+    D[&quot;向量数据库&lt;br/&gt;Milvus/Elasticsearch&quot;]
+
+    E[&quot;用户提问&quot;]
+    F[&quot;语义改写&lt;br/&gt;HyDE/分解问题&quot;]
+    G[&quot;多路召回&lt;br/&gt;向量+BM25混合&quot;]
+    H[&quot;重排序&lt;br/&gt;精排Top-K&quot;]
+    I[&quot;LLM生成&lt;br/&gt;基于检索结果&quot;]
+    J[&quot;最终答案&quot;]
+
+    A --&gt; B --&gt; C --&gt; D
+    E --&gt; F --&gt; G --&gt; H --&gt; I --&gt; J
+    D -.检索相关文档.-&gt; H
+
+    style A fill:#ffe6e6
+    style D fill:#e6f3ff
+    style E fill:#fff9e6
+    style J fill:#e6ffe6</code></pre>
+
+<h3 id="1-数据预处理：文本分块"><a href="#1-数据预处理：文本分块" class="headerlink" title="1. 数据预处理：文本分块"></a>1. 数据预处理：文本分块</h3><p>这是 RAG 系统的基础，直接影响检索精度。</p>
+<h4 id="五大经典分块策略"><a href="#五大经典分块策略" class="headerlink" title="五大经典分块策略"></a>五大经典分块策略</h4><table>
+<thead>
+<tr>
+<th>策略</th>
+<th>原理</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>固定分块</strong></td>
+<td>按 token&#x2F;字符数等比例切分</td>
+<td>简单快速</td>
+<td>易割裂上下文</td>
+</tr>
+<tr>
+<td><strong>语义分块</strong></td>
+<td>计算句子相似度，在漂移点切分</td>
+<td>语义连贯</td>
+<td>计算成本高</td>
+</tr>
+<tr>
+<td><strong>结构感知</strong></td>
+<td>按标题&#x2F;章节&#x2F;段落边界切分</td>
+<td>保留文档结构</td>
+<td>依赖文档质量</td>
+</tr>
+<tr>
+<td><strong>大模型分块</strong></td>
+<td>用 tokenizer 按 token 边界切分</td>
+<td>精准可控</td>
+<td>需调用 LLM</td>
+</tr>
+<tr>
+<td><strong>递归字符分块</strong></td>
+<td>先粗后细，兼顾结构和灵活性</td>
+<td>平衡性好</td>
+<td>仍可能割裂语义</td>
+</tr>
+</tbody></table>
+<h4 id="进阶方案：重叠和混合策略"><a href="#进阶方案：重叠和混合策略" class="headerlink" title="进阶方案：重叠和混合策略"></a>进阶方案：重叠和混合策略</h4><p><strong>为什么要用重叠？</strong><br>固定分块容易割裂上下文关键信息。重叠是补偿手段：</p>
+<ul>
+<li>增加的信息噪声 &lt; 重叠带来的语义连续性收益</li>
+<li>因此<strong>推荐使用重叠</strong></li>
+</ul>
+<p><strong>混合分块</strong>：<br>结合上述策略，例如：</p>
+<ul>
+<li>基础组合：固定分块 + 结构感知 + 递归字符分块</li>
+<li>高级组合：再加语义分块和大模型分块</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 伪代码：混合分块策略</span></span><br><span class="line">chunks = []</span><br><span class="line"><span class="comment"># 先按结构分割</span></span><br><span class="line"><span class="keyword">for</span> section <span class="keyword">in</span> document.sections:</span><br><span class="line">    <span class="comment"># 再按固定大小分块</span></span><br><span class="line">    <span class="keyword">for</span> chunk <span class="keyword">in</span> fixed_split(section, size=<span class="number">512</span>, overlap=<span class="number">50</span>):</span><br><span class="line">        <span class="comment"># 最后用语义相似度合并相邻段落</span></span><br><span class="line">        <span class="keyword">if</span> similar(chunk, prev_chunk) &gt; threshold:</span><br><span class="line">            merge(chunk, prev_chunk)</span><br><span class="line">        chunks.append(chunk)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-向量化：把文本变成-AI-理解的语言"><a href="#2-向量化：把文本变成-AI-理解的语言" class="headerlink" title="2. 向量化：把文本变成 AI 理解的语言"></a>2. 向量化：把文本变成 AI 理解的语言</h3><h4 id="选择合适的-Embedding-模型"><a href="#选择合适的-Embedding-模型" class="headerlink" title="选择合适的 Embedding 模型"></a>选择合适的 Embedding 模型</h4><pre><code class="highlight mermaid">graph TD
+    A[&quot;Embedding 模型选择&quot;]
+    B[&quot;维度&quot;]
+    C[&quot;Token 数&quot;]
+    D[&quot;质量&quot;]
+
+    A --&gt; B
+    A --&gt; C
+    A --&gt; D
+
+    B --&gt; B1[&quot;维度越多&lt;br/&gt;信息越精细&quot;]
+    C --&gt; C1[&quot;Token 越少&lt;br/&gt;在相同维度下&lt;br/&gt;编码越精细&quot;]
+    D --&gt; D1[&quot;优先选择&lt;br/&gt;领域相关的&lt;br/&gt;微调模型&quot;]</code></pre>
+
+<p><strong>关键指标</strong>：</p>
+<ul>
+<li>维度（Dimension）：更高 &#x3D; 信息更丰富但成本更高</li>
+<li>Token 数：相同维度下，token 少的模型编码更细致</li>
+<li>模型质量：通用模型 vs 领域微调模型</li>
+</ul>
+<hr>
+<h3 id="3-检索：找到相关的文档"><a href="#3-检索：找到相关的文档" class="headerlink" title="3. 检索：找到相关的文档"></a>3. 检索：找到相关的文档</h3><pre><code class="highlight mermaid">graph LR
+    A[&quot;用户提问&quot;]
+
+    B[&quot;向量检索&lt;br/&gt;语义相似&quot;]
+    C[&quot;关键词检索&lt;br/&gt;BM25算法&quot;]
+
+    D[&quot;融合策略&quot;]
+
+    E[&quot;手动加权&lt;br/&gt;0.7*向量+0.3*BM25&quot;]
+    F[&quot;模型加权&lt;br/&gt;训练小模型&lt;br/&gt;学习最优权重&quot;]
+
+    G[&quot;重排序&lt;br/&gt;精排Top-K&quot;]
+
+    A --&gt; B
+    A --&gt; C
+    B --&gt; D
+    C --&gt; D
+    D --&gt; E
+    D --&gt; F
+    E --&gt; G
+    F --&gt; G
+
+    style B fill:#e6f3ff
+    style C fill:#fff9e6
+    style E fill:#e6ffe6
+    style F fill:#ffe6e6</code></pre>
+
+<h4 id="多路召回策略"><a href="#多路召回策略" class="headerlink" title="多路召回策略"></a>多路召回策略</h4><p>不要只依赖单一检索方式。实际应用中推荐：</p>
+<ol>
+<li><strong>向量检索</strong>：捕捉语义相似性，效果好但可能漂移</li>
+<li><strong>BM25 关键词检索</strong>：精准定位关键信息，但无法理解语义</li>
+<li><strong>混合融合</strong>：取两者之长，补两者之短</li>
+</ol>
+<h4 id="加权融合"><a href="#加权融合" class="headerlink" title="加权融合"></a>加权融合</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">相关性分数 = α × 向量相似度 + (1-α) × BM25分数</span><br><span class="line"></span><br><span class="line">三种加权方法：</span><br><span class="line">1. 手动调参：设置固定的 α 值（0.3-0.7）</span><br><span class="line">2. 机器学习：训练小模型自动学习最优权重</span><br><span class="line">3. 启发式规则：根据查询类型动态调整</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="4-语义改写：消除歧义，靠近文档"><a href="#4-语义改写：消除歧义，靠近文档" class="headerlink" title="4. 语义改写：消除歧义，靠近文档"></a>4. 语义改写：消除歧义，靠近文档</h3><p>用户的提问往往有歧义、缺少上下文，或表述不匹配文档术语。</p>
+<h4 id="三大改写技巧"><a href="#三大改写技巧" class="headerlink" title="三大改写技巧"></a>三大改写技巧</h4><pre><code class="highlight mermaid">graph TD
+    A[&quot;语义改写的目标&quot;]
+
+    B[&quot;假设性问答 HyDE&quot;]
+    C[&quot;问题分解&quot;]
+    D[&quot;上下文补全&quot;]
+
+    A --&gt; B
+    A --&gt; C
+    A --&gt; D
+
+    B --&gt; B1[&quot;原理：用LLM生成&lt;br/&gt;假的答案/文档&lt;br/&gt;用假文档向量检索&quot;]
+    B --&gt; B2[&quot;效果：比原提问&lt;br/&gt;更接近真实文档&quot;]
+
+    C --&gt; C1[&quot;分解复杂问题为&lt;br/&gt;多个简单问题&lt;br/&gt;提高语义准确性&quot;]
+
+    D --&gt; D1[&quot;补全&#x27;它&#x27;&#x27;我们之前说的&#x27;&lt;br/&gt;这类代词指代&lt;br/&gt;增加上下文信息&quot;]</code></pre>
+
+<p><strong>HyDE 工作流</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">用户提问：「如何优化搜索引擎性能？」</span><br><span class="line">        ⬇️</span><br><span class="line">LLM 生成假答案：「搜索引擎性能优化涉及...</span><br><span class="line">              1. 索引优化，使用倒排索引...</span><br><span class="line">              2. 查询优化，采用缓存...」</span><br><span class="line">        ⬇️</span><br><span class="line">对假答案做向量检索</span><br><span class="line">        ⬇️</span><br><span class="line">找到真实相关文档</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="5-重排序：让最相关的文档排第一"><a href="#5-重排序：让最相关的文档排第一" class="headerlink" title="5. 重排序：让最相关的文档排第一"></a>5. 重排序：让最相关的文档排第一</h3><p>检索出 Top-100 个候选后，用更精细的模型精排 Top-K。</p>
+<p><strong>常见重排序方案</strong>：</p>
+<ul>
+<li>交叉编码器（Cross-Encoder）：精度最高但速度慢</li>
+<li>LLM 排序：直接用 LLM 判断相关性</li>
+<li>多维度评分：综合考虑相关性、权威性、新鲜度</li>
+</ul>
+<hr>
+<h2 id="结果评估：衡量-RAG-效果"><a href="#结果评估：衡量-RAG-效果" class="headerlink" title="结果评估：衡量 RAG 效果"></a>结果评估：衡量 RAG 效果</h2><h3 id="检索评测维度"><a href="#检索评测维度" class="headerlink" title="检索评测维度"></a>检索评测维度</h3><p>检索效果不等于最终答案效果。</p>
+<p>错误认知：召回了相关文档 &#x3D; 能给出好答案</p>
+<p>正确理解：需要同时衡量</p>
+<ul>
+<li>召回量：有没有都召回出来？</li>
+<li>召回质：召回的都是相关的吗？</li>
+<li>命中率：能解决实际问题吗？</li>
+</ul>
+<h4 id="检索质量三问"><a href="#检索质量三问" class="headerlink" title="检索质量三问"></a>检索质量三问</h4><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>含义</th>
+<th>评估方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>召回率</strong></td>
+<td>有多少相关文档被找到了？</td>
+<td>标准答案中出现的词，在回答中出现了几次？</td>
+</tr>
+<tr>
+<td><strong>精确率</strong></td>
+<td>找到的有多少是真的相关？</td>
+<td>回答中出现的词，在标准答案中的占比？</td>
+</tr>
+<tr>
+<td><strong>命中率</strong></td>
+<td>能实际解决问题吗？</td>
+<td>人工验证：答案是否真的回答了问题？</td>
+</tr>
+</tbody></table>
+<h4 id="生成评测：忠诚度和简洁度"><a href="#生成评测：忠诚度和简洁度" class="headerlink" title="生成评测：忠诚度和简洁度"></a>生成评测：忠诚度和简洁度</h4><pre><code class="highlight mermaid">graph LR
+    A[&quot;生成结果评测&quot;]
+
+    B[&quot;忠诚度&lt;br/&gt;是否按文档内容生成？&quot;]
+    C[&quot;简洁度&lt;br/&gt;是否简洁回复了问题？&quot;]
+
+    A --&gt; B
+    A --&gt; C
+
+    B --&gt; B1[&quot;方法1：LLM自动评估&quot;]
+    B --&gt; B2[&quot;方法2：重叠词分析&lt;br/&gt;精确率/召回率&quot;]
+
+    C --&gt; C1[&quot;方法1：LLM自动评估&quot;]
+    C --&gt; C2[&quot;方法2：长度/关键词&lt;br/&gt;匹配度分析&quot;]</code></pre>
+
+<p><strong>精确度和召回率计算</strong>（使用重叠词）：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">召回率 = 标准答案中的词在回答中出现的个数 / 标准答案中的词总数</span><br><span class="line">精确率 = 回答中的词在标准答案中出现的个数 / 回答中的词总数</span><br><span class="line">F1分数 = 2 × (精确率 × 召回率) / (精确率 + 召回率)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="向量检索的黑科技：相似度算法与索引"><a href="#向量检索的黑科技：相似度算法与索引" class="headerlink" title="向量检索的黑科技：相似度算法与索引"></a>向量检索的黑科技：相似度算法与索引</h2><h3 id="相似度计算三大算法"><a href="#相似度计算三大算法" class="headerlink" title="相似度计算三大算法"></a>相似度计算三大算法</h3><ol>
+<li><p>点积 (Dot Product)</p>
+<ul>
+<li>速度快，但对向量长度敏感</li>
+</ul>
+</li>
+<li><p>欧式距离 (Euclidean Distance)</p>
+<ul>
+<li>几何直观，计算成本中等</li>
+</ul>
+</li>
+<li><p>余弦相似度 (Cosine Similarity)</p>
+<ul>
+<li>最常用，归一化处理，范围[-1,1]</li>
+</ul>
+</li>
+</ol>
+<h3 id="向量搜索加速：从暴力到-ANN"><a href="#向量搜索加速：从暴力到-ANN" class="headerlink" title="向量搜索加速：从暴力到 ANN"></a>向量搜索加速：从暴力到 ANN</h3><p>为了在大规模数据集（百万、亿级）上快速搜索，需要优化索引。</p>
+<pre><code class="highlight mermaid">graph TD
+    A[&quot;向量搜索算法&quot;]
+
+    B[&quot;暴力搜索&lt;br/&gt;时间复杂度O(n)&quot;]
+    C[&quot;近似最近邻 ANN&lt;br/&gt;牺牲精度换速度&quot;]
+
+    A --&gt; B
+    A --&gt; C
+
+    C --&gt; C1[&quot;HNSW&lt;br/&gt;图索引&lt;br/&gt;层级导航&quot;]
+    C --&gt; C2[&quot;LSH&lt;br/&gt;哈希桶&lt;br/&gt;快速定位&quot;]
+    C --&gt; C3[&quot;Tree-base&lt;br/&gt;树形索引&lt;br/&gt;二分查找&quot;]
+    C --&gt; C4[&quot;Cluster-base&lt;br/&gt;簇索引&lt;br/&gt;先找簇再检索&quot;]
+
+    C1 --&gt; P[&quot;实际效果&lt;br/&gt;HNSW通常最好&quot;]</code></pre>
+
+<h4 id="压缩算法：节省内存"><a href="#压缩算法：节省内存" class="headerlink" title="压缩算法：节省内存"></a>压缩算法：节省内存</h4><p>大向量模型（维度 1024+ ）消耗大量内存。压缩算法很必要。</p>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>原理</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SQ</strong></td>
+<td>标量量化，用哈希桶思想将向量分割</td>
+<td>有损压缩，简单快速</td>
+</tr>
+<tr>
+<td><strong>PQ</strong></td>
+<td>乘积量化，将 float 映射为 int</td>
+<td>有损压缩，压缩率高</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="实践建议：打造高质量-RAG-系统"><a href="#实践建议：打造高质量-RAG-系统" class="headerlink" title="实践建议：打造高质量 RAG 系统"></a>实践建议：打造高质量 RAG 系统</h2><h3 id="数据清洗是基础"><a href="#数据清洗是基础" class="headerlink" title="数据清洗是基础"></a>数据清洗是基础</h3><p>垃圾进，垃圾出</p>
+<p>再好的 RAG 架构也救不了烂数据。数据清洗和规范化至少要包括：</p>
+<ul>
+<li>去除重复、错误的文本</li>
+<li>统一术语、格式规范</li>
+<li>验证数据准确性和完整性</li>
+<li>处理特殊字符和编码问题</li>
+</ul>
+<h3 id="四个优化方向"><a href="#四个优化方向" class="headerlink" title="四个优化方向"></a>四个优化方向</h3><ol>
+<li>纯文本 → 多模态（加入视频、图片）</li>
+<li>线性检索 → 多路并行（向量+关键词+图像）</li>
+<li>简单索引 → 高性能索引（优化向量DB）</li>
+<li>静态生成 → 循环自我修正（反馈优化）</li>
+</ol>
+<hr>
+<h2 id="总结：RAG-的核心心法"><a href="#总结：RAG-的核心心法" class="headerlink" title="总结：RAG 的核心心法"></a>总结：RAG 的核心心法</h2><p>RAG &#x3D; 检索 + 生成</p>
+<p>核心：把信息检索当主业，生成只是锦上添花</p>
+<ol>
+<li><p>分块很关键</p>
+<ul>
+<li>选对策略，保留语义连贯性</li>
+</ul>
+</li>
+<li><p>检索是核心</p>
+<ul>
+<li>多路召回，精排融合</li>
+</ul>
+</li>
+<li><p>改写要细致</p>
+<ul>
+<li>消除歧义，靠近文档</li>
+</ul>
+</li>
+<li><p>评估要全面</p>
+<ul>
+<li>不只看召回，看最终答案</li>
+</ul>
+</li>
+</ol>
+<h3 id="最后的建议"><a href="#最后的建议" class="headerlink" title="最后的建议"></a>最后的建议</h3><p>RAG 不是一蹴而就的技术，而是一个<strong>持续优化的过程</strong>：</p>
+<ol>
+<li><strong>从简到繁</strong>：先用固定分块 + 向量检索，再逐步加复杂度</li>
+<li><strong>从通用到专用</strong>：用通用模型验证方案，再用领域模型优化</li>
+<li><strong>闭环反馈</strong>：不断收集用户反馈，迭代评估体系和算法</li>
+<li><strong>成本优先</strong>：在保证效果的前提下，优先考虑成本和延迟</li>
+</ol>
+<hr>
+<p><strong>参考资源</strong>：</p>
+<ul>
+<li>向量数据库：Milvus, Pinecone, Weaviate</li>
+<li>Embedding 模型：OpenAI API, Sentence Transformers</li>
+<li>自动评估工具：RAGAS, TruLens</li>
+<li>框架：LangChain, LlamaIndex</li>
+</ul>
+<p>希望这篇文章能帮你理解 RAG 的全貌。如果有问题，欢迎留言讨论！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lvren.xyz">旅人</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lvren.xyz/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/">https://lvren.xyz/2026/04/02/RAG-LLM-检索增强生成深度指南/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lvren.xyz" target="_blank">旅人</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/RAG/">RAG</a><a class="post-meta__tags" href="/tags/LLM/">LLM</a><a class="post-meta__tags" href="/tags/%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93/">向量数据库</a><a class="post-meta__tags" href="/tags/%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA/">检索增强</a><a class="post-meta__tags" href="/tags/AI/">AI</a></div><div class="post-share"><div class="social-share" data-image="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/04/08/%E5%A4%A7%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="大文件上传"><img class="cover" src="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/v2-93aea311db2f6f48ae7b7d961d190741_1440w.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">大文件上传</div></div><div class="info-2"><div class="info-item-1">为什么需要分片上传？对于后端来说，如果文件上传的时候采用一整个上传的方式，那么后端需要在内存中留出很大一部分空间来进行一个中转。如果文件过大，那么可能会造成内存空间的拥挤，频繁的IO造成服务器性能的下降，在web这个多并发的情况下，性能的下降会导致响应时间的增加，严重甚至会导致服务的崩溃。所以我们要对大文件的上传进行专门的优化。 同时，过大的文件传输也会长时间的占用网络信道，会导致网络的拥塞，其余的服务响应时间也会增加。 总结来说，传统整文件上传面临三个核心问题：  内存压力 — 服务端需要一次性将整个文件加载到内存中，上百MB甚至GB级的文件很容易导致OOM 网络不稳定 — 传输过程中一旦网络中断，整个文件需要重新上传，用户体验极差 上传时间过长 —...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">旅人</div><div class="author-info-description">技术栈也是栈</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/whrgg"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客休息</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RAG%EF%BC%9A%E7%94%A8%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%89%93%E7%A0%B4%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%9F%A5%E8%AF%86%E5%B1%80%E9%99%90"><span class="toc-text">RAG：用检索增强生成打破大模型的知识局限</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-RAG%EF%BC%9F"><span class="toc-text">为什么需要 RAG？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%9B%9B%E5%A4%A7%E7%97%9B%E7%82%B9"><span class="toc-text">大模型的四大痛点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAG-%E7%9A%84%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B"><span class="toc-text">RAG 的完整流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%9A%E6%96%87%E6%9C%AC%E5%88%86%E5%9D%97"><span class="toc-text">1. 数据预处理：文本分块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E5%A4%A7%E7%BB%8F%E5%85%B8%E5%88%86%E5%9D%97%E7%AD%96%E7%95%A5"><span class="toc-text">五大经典分块策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6%E6%96%B9%E6%A1%88%EF%BC%9A%E9%87%8D%E5%8F%A0%E5%92%8C%E6%B7%B7%E5%90%88%E7%AD%96%E7%95%A5"><span class="toc-text">进阶方案：重叠和混合策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%90%91%E9%87%8F%E5%8C%96%EF%BC%9A%E6%8A%8A%E6%96%87%E6%9C%AC%E5%8F%98%E6%88%90-AI-%E7%90%86%E8%A7%A3%E7%9A%84%E8%AF%AD%E8%A8%80"><span class="toc-text">2. 向量化：把文本变成 AI 理解的语言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84-Embedding-%E6%A8%A1%E5%9E%8B"><span class="toc-text">选择合适的 Embedding 模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A3%80%E7%B4%A2%EF%BC%9A%E6%89%BE%E5%88%B0%E7%9B%B8%E5%85%B3%E7%9A%84%E6%96%87%E6%A1%A3"><span class="toc-text">3. 检索：找到相关的文档</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E8%B7%AF%E5%8F%AC%E5%9B%9E%E7%AD%96%E7%95%A5"><span class="toc-text">多路召回策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E6%9D%83%E8%9E%8D%E5%90%88"><span class="toc-text">加权融合</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%AF%AD%E4%B9%89%E6%94%B9%E5%86%99%EF%BC%9A%E6%B6%88%E9%99%A4%E6%AD%A7%E4%B9%89%EF%BC%8C%E9%9D%A0%E8%BF%91%E6%96%87%E6%A1%A3"><span class="toc-text">4. 语义改写：消除歧义，靠近文档</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E5%A4%A7%E6%94%B9%E5%86%99%E6%8A%80%E5%B7%A7"><span class="toc-text">三大改写技巧</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%87%8D%E6%8E%92%E5%BA%8F%EF%BC%9A%E8%AE%A9%E6%9C%80%E7%9B%B8%E5%85%B3%E7%9A%84%E6%96%87%E6%A1%A3%E6%8E%92%E7%AC%AC%E4%B8%80"><span class="toc-text">5. 重排序：让最相关的文档排第一</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%E8%AF%84%E4%BC%B0%EF%BC%9A%E8%A1%A1%E9%87%8F-RAG-%E6%95%88%E6%9E%9C"><span class="toc-text">结果评估：衡量 RAG 效果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E7%B4%A2%E8%AF%84%E6%B5%8B%E7%BB%B4%E5%BA%A6"><span class="toc-text">检索评测维度</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A3%80%E7%B4%A2%E8%B4%A8%E9%87%8F%E4%B8%89%E9%97%AE"><span class="toc-text">检索质量三问</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E8%AF%84%E6%B5%8B%EF%BC%9A%E5%BF%A0%E8%AF%9A%E5%BA%A6%E5%92%8C%E7%AE%80%E6%B4%81%E5%BA%A6"><span class="toc-text">生成评测：忠诚度和简洁度</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2%E7%9A%84%E9%BB%91%E7%A7%91%E6%8A%80%EF%BC%9A%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%AE%97%E6%B3%95%E4%B8%8E%E7%B4%A2%E5%BC%95"><span class="toc-text">向量检索的黑科技：相似度算法与索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97%E4%B8%89%E5%A4%A7%E7%AE%97%E6%B3%95"><span class="toc-text">相似度计算三大算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E6%90%9C%E7%B4%A2%E5%8A%A0%E9%80%9F%EF%BC%9A%E4%BB%8E%E6%9A%B4%E5%8A%9B%E5%88%B0-ANN"><span class="toc-text">向量搜索加速：从暴力到 ANN</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E7%AE%97%E6%B3%95%EF%BC%9A%E8%8A%82%E7%9C%81%E5%86%85%E5%AD%98"><span class="toc-text">压缩算法：节省内存</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE%EF%BC%9A%E6%89%93%E9%80%A0%E9%AB%98%E8%B4%A8%E9%87%8F-RAG-%E7%B3%BB%E7%BB%9F"><span class="toc-text">实践建议：打造高质量 RAG 系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97%E6%98%AF%E5%9F%BA%E7%A1%80"><span class="toc-text">数据清洗是基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E4%B8%AA%E4%BC%98%E5%8C%96%E6%96%B9%E5%90%91"><span class="toc-text">四个优化方向</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9ARAG-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%BF%83%E6%B3%95"><span class="toc-text">总结：RAG 的核心心法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E7%9A%84%E5%BB%BA%E8%AE%AE"><span class="toc-text">最后的建议</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/" title="RAG：用检索增强生成打破大模型的知识局限">RAG：用检索增强生成打破大模型的知识局限</a><time datetime="2026-04-01T16:00:00.000Z" title="发表于 2026-04-02 00:00:00">2026-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/08/%E5%A4%A7%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="大文件上传"><img src="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/v2-93aea311db2f6f48ae7b7d961d190741_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大文件上传"/></a><div class="content"><a class="title" href="/2025/04/08/%E5%A4%A7%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="大文件上传">大文件上传</a><time datetime="2025-04-08T15:55:54.000Z" title="发表于 2025-04-08 23:55:54">2025-04-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/23/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86-CAP/" title="分布式基本原理-CAP">分布式基本原理-CAP</a><time datetime="2025-03-23T14:16:13.000Z" title="发表于 2025-03-23 22:16:13">2025-03-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/15/DDIA%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" title="DDIA第一部分"><img src="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/20250305125903.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="DDIA第一部分"/></a><div class="content"><a class="title" href="/2025/02/15/DDIA%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" title="DDIA第一部分">DDIA第一部分</a><time datetime="2025-02-15T03:53:41.000Z" title="发表于 2025-02-15 11:53:41">2025-02-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/12/%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95spirng%E6%A1%86%E6%9E%B6-%E5%AE%9E%E7%8E%B0MVC/" title="手写一个简单spirng框架 实现MVC">手写一个简单spirng框架 实现MVC</a><time datetime="2024-12-12T10:55:20.000Z" title="发表于 2024-12-12 18:55:20">2024-12-12</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="copyright">&copy;1 - 2026 By 旅人</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
