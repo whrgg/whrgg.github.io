@@ -1,0 +1,979 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>mysql基础 | 旅人</title><meta name="author" content="旅人"><meta name="copyright" content="旅人"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="可以通过命令行，在管理员模式下执行以下命令： 1net start mysql80   或者可以通过计算机管理中的服务打开。客户端启动  使用mysql提供的命令行工具  通过命令提示符（cmd）执行以下命令:   1mysql [-h IP地址] [-P 端口号] -u 用户名 -p    其中，IP地址和端口号可以省略，默认为本地连接。如果使用端口号，则需要指定正确的端口号。用户名为必填项，-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql基础">
+<meta property="og:url" content="https://lvren.xyz/2024/05/05/mysql%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="旅人">
+<meta property="og:description" content="可以通过命令行，在管理员模式下执行以下命令： 1net start mysql80   或者可以通过计算机管理中的服务打开。客户端启动  使用mysql提供的命令行工具  通过命令提示符（cmd）执行以下命令:   1mysql [-h IP地址] [-P 端口号] -u 用户名 -p    其中，IP地址和端口号可以省略，默认为本地连接。如果使用端口号，则需要指定正确的端口号。用户名为必填项，-">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q1.qlogo.cn/g?b=qq&nk=2186840198&s=640">
+<meta property="article:published_time" content="2024-05-05T08:49:05.000Z">
+<meta property="article:modified_time" content="2025-03-05T15:27:22.000Z">
+<meta property="article:author" content="旅人">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="基础">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q1.qlogo.cn/g?b=qq&nk=2186840198&s=640"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "mysql基础",
+  "url": "https://lvren.xyz/2024/05/05/mysql%E5%9F%BA%E7%A1%80/",
+  "image": "https://q1.qlogo.cn/g?b=qq&nk=2186840198&s=640",
+  "datePublished": "2024-05-05T08:49:05.000Z",
+  "dateModified": "2025-03-05T15:27:22.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "旅人",
+      "url": "https://lvren.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/B2FDB3678D6ADE4257B261B0D08160C0.gif"><link rel="canonical" href="https://lvren.xyz/2024/05/05/mysql%E5%9F%BA%E7%A1%80/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.6.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'mysql基础',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.2"></head><body><div class="bg-animation" id="web_bg" style="background: [object Object];"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于作者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/B2FDB3678D6ADE4257B261B0D08160C0.gif" alt="Logo"><span class="site-name">旅人</span></a><a class="nav-page-title" href="/"><span class="site-name">mysql基础</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于作者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">mysql基础</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-05-05T08:49:05.000Z" title="发表于 2024-05-05 16:49:05">2024-05-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-05T15:27:22.000Z" title="更新于 2025-03-05 23:27:22">2025-03-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>可以通过命令行，在管理员模式下执行以下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net start mysql80</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="或者可以通过计算机管理中的服务打开。"><a href="#或者可以通过计算机管理中的服务打开。" class="headerlink" title="或者可以通过计算机管理中的服务打开。"></a>或者可以通过计算机管理中的服务打开。</h2><p>客户端启动</p>
+<ul>
+<li><p>使用mysql提供的命令行工具</p>
+</li>
+<li><p>通过命令提示符（cmd）执行以下命令:</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql [-h IP地址] [-P 端口号] -u 用户名 -p</span><br></pre></td></tr></table></figure>
+
+
+
+<p>其中，IP地址和端口号可以省略，默认为本地连接。如果使用端口号，则需要指定正确的端口号。用户名为必填项，-p选项表示需要输入密码。</p>
+<p>例如，默认连接本地的MySQL服务器，使用root用户登录，可以直接执行以下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+
+<p>基础</p>
+<h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><p>MySQL是一个基于关系模型的数据库管理系统，它由多个相互连接的二维表组成。</p>
+<p>特点：</p>
+<ul>
+<li><p>使用表进行数据存储，格式统一，便于维护。</p>
+</li>
+<li><p>使用SQL语言进行操作，标准统一，使用方便。</p>
+</li>
+</ul>
+<p>DBMS：数据库管理系统</p>
+<p>SQL</p>
+<h2 id="通用语法"><a href="#通用语法" class="headerlink" title="通用语法"></a>通用语法</h2><ul>
+<li><p>SQL语句可以单行或多行书写，以分号结尾。</p>
+</li>
+<li><p>可以使用空格或制表符提高可读性。</p>
+</li>
+<li><p>SQL语句不区分大小写。</p>
+</li>
+<li><p>单行注释可以使用 “–” 或 “#” ，多行注释使用 “&#x2F;…&#x2F;“。</p>
+</li>
+</ul>
+<h2 id="SQL的分类"><a href="#SQL的分类" class="headerlink" title="SQL的分类"></a>SQL的分类</h2><h3 id="DDL（数据定义语言）：用于定义数据库、表和字段等"><a href="#DDL（数据定义语言）：用于定义数据库、表和字段等" class="headerlink" title="DDL（数据定义语言）：用于定义数据库、表和字段等"></a>DDL（数据定义语言）：用于定义数据库、表和字段等</h3><p>ddl：data definition language</p>
+<h4 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h4><ul>
+<li>查询所有数据库</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW DATABASES;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>查询当前所在的数据库</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT DATABASE();</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>创建数据库</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE [IF NOT EXISTS] 数据库名 [DEFAULT CHARSET 字符集][COLLATE 排序规则];</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>删除数据库</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP DATABASE [IF EXISTS] 数据库名;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>使用数据库,切换数据库</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">USE 数据库名;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="表操作"><a href="#表操作" class="headerlink" title="表操作"></a>表操作</h4><ul>
+<li>查询当前数据库中的所有表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW TABLES;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>查询表结构</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DESC 表名;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>查询指定表的建表语句</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW CREATE TABLE 表名;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p>创建表<br> 创建表的时候可以指明：</p>
+</li>
+<li><p><strong>表名</strong>：表的名称，用于唯一标识该表。</p>
+</li>
+<li><p><strong>列名及数据类型</strong>：每列的名称和对应的数据类型，例如整数、字符串、日期等。</p>
+</li>
+<li><p><strong>约束</strong>：定义列的约束，如主键约束、唯一约束、非空约束等。</p>
+</li>
+<li><p><strong>默认值</strong>：为列指定默认值，当插入新记录时，若未提供该列的值，则自动使用默认值。</p>
+</li>
+<li><p><strong>索引</strong>：为表的列创建索引，以提高查询性能。</p>
+</li>
+<li><p><strong>分区方式</strong>：如果需要，可以指定表的分区方式，以便更高效地管理数据。</p>
+</li>
+<li><p><strong>存储引擎</strong>：指定表的存储引擎，如InnoDB、MyISAM等，不同存储引擎有不同的特性和适用场景。</p>
+</li>
+<li><p><strong>表空间</strong>：指定表所属的表空间，用于控制表的存储位置和空间管理。</p>
+</li>
+<li><p><strong>权限</strong>：指定表的访问权限，包括读取、写入、修改等权限。</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE 表名 (</span><br><span class="line">  字段1 类型 [注释],</span><br><span class="line">  字段2 类型 [注释],</span><br><span class="line">  ...</span><br><span class="line">  字段n 类型 [注释]</span><br><span class="line">) [注释];</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>修改表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 添加字段</span><br><span class="line">ALTER TABLE 表名 ADD 字段名 类型 [注释];</span><br><span class="line"></span><br><span class="line"># 修改字段名和类型</span><br><span class="line">ALTER TABLE 表名 CHANGE 旧字段名 新字段名 类型 [注释];</span><br><span class="line"></span><br><span class="line"># 修改数据类型</span><br><span class="line">ALTER TABLE 表名 MODIFY 字段名 新数据类型;</span><br><span class="line"></span><br><span class="line"># 修改表名</span><br><span class="line">ALTER TABLE 表名 RENAME TO 新表名;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>删除表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DROP TABLE [IF EXISTS] 表名;</span><br><span class="line"></span><br><span class="line"># 清空表数据，但不删除表结构</span><br><span class="line">TRUNCATE TABLE 表名;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="DML（数据操作语言）：用于对数据进行增、删、改"><a href="#DML（数据操作语言）：用于对数据进行增、删、改" class="headerlink" title="DML（数据操作语言）：用于对数据进行增、删、改"></a><strong>DML（数据操作语言）：用于对数据进行增、删、改</strong></h3><h4 id="新增数据"><a href="#新增数据" class="headerlink" title="新增数据"></a>新增数据</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO 表名 (字段1, 字段2, ...) VALUES (值1, 值2, ...),(值1, 值2, ...),(值1, 值2, ...),(值1, 值2, ...),(值1, 值2, ...),(值1, 值2, ...),(值1, 值2, ...);</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="修改数据"><a href="#修改数据" class="headerlink" title="修改数据"></a>修改数据</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UPDATE 表名 SET 字段1 = 值1, 字段2 = 值2, ... [WHERE 条件];</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE FROM 表名 WHERE 条件;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="DQL（数据查询语言）：用于查询数据"><a href="#DQL（数据查询语言）：用于查询数据" class="headerlink" title="DQL（数据查询语言）：用于查询数据"></a><strong>DQL（数据查询语言）：用于查询数据</strong></h3><p>语法结构：<strong>必需按照顺序，否则会出错</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SELECT 字段列表 </span><br><span class="line">FROM 表名列表 </span><br><span class="line">[WHERE 条件列表] </span><br><span class="line">[GROUP BY 分组字段列表]</span><br><span class="line">[HAVING 分组后过滤条件] </span><br><span class="line">[ORDER BY 排序字段序列] </span><br><span class="line">[LIMIT 分页参数];</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="基础查询"><a href="#基础查询" class="headerlink" title="基础查询"></a>基础查询</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM 表名; -- 返回所有字段</span><br><span class="line">SELECT 字段名1, 字段名2, 字段名3 FROM 表名;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="设置别名"><a href="#设置别名" class="headerlink" title="设置别名"></a>设置别名</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT 字段1 [AS 别名1], 字段2 [AS 别名2] FROM 表名;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="去除重复记录"><a href="#去除重复记录" class="headerlink" title="去除重复记录"></a>去除重复记录</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT DISTINCT 字段列表 FROM 表名;</span><br><span class="line">select distinct</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="条件查询"><a href="#条件查询" class="headerlink" title="条件查询"></a>条件查询</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT 字段列表 FROM 表名 WHERE 条件列表;</span><br></pre></td></tr></table></figure>
+
+<p>条件运算符<br><strong>不可以使用&#x3D;NULL的法</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">=   -- 等于</span><br><span class="line">&lt;&gt;  -- 不等于</span><br><span class="line">&gt;   -- 大于</span><br><span class="line">=  -- 大于等于</span><br><span class="line">逻辑运算符</span><br><span class="line">```plaintext</span><br><span class="line">AND -- 与</span><br><span class="line">OR  -- 或</span><br><span class="line">NOT -- 非</span><br></pre></td></tr></table></figure>
+
+<p>聚合函数<br><strong>建议与分组函数配合食用更佳</strong><br>将一列作为一个整体，进行纵向计算<br>null值不参与所有聚合函数的运算<br>聚合函数可以对一列数据进行统计计算，常见的聚合函数包括：</p>
+<ul>
+<li><p>COUNT：统计数量</p>
+</li>
+<li><p>MAX：最大值</p>
+</li>
+<li><p>MIN：最小值</p>
+</li>
+<li><p>AVG：平均值</p>
+</li>
+<li><p>SUM：求和</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SELECT COUNT(字段或*) FROM 表名; -- 统计数量</span><br><span class="line">SELECT MAX(字段) FROM 表名; -- 最大值</span><br><span class="line">SELECT MIN(字段) FROM 表名; -- 最小值</span><br><span class="line">SELECT AVG(字段) FROM 表名; -- 平均值</span><br><span class="line">SELECT SUM(字段) FROM 表名; -- 求和</span><br></pre></td></tr></table></figure>
+
+<p>分组查询</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT 字段 FROM 表名 [WHERE 条件] GROUP BY 分组字段 [HAVING 分组后过滤条件];</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>关于where和having</strong>：where是在分组之前进行筛选，不满足条件不参与分组,而having是分组之后对结果进行过滤 执行时机在分组之后 聚合之前<br><strong>分组后只能查询聚合字段和分组的字段</strong></p>
+<p>排序查询</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT 字段 FROM 表名 ORDER BY 字段名 [排序方式], 字段名 [排序方式];</span><br></pre></td></tr></table></figure>
+
+
+<p>排序方式包括升序（ASC）和降序（DESC），默认为升序。</p>
+<p>分页查询<br><strong>注意数据库的索引是从1开始的</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM 表名 LIMIT 初始位置,要查询的记录条数</span><br><span class="line">SELECT * FROM 表名 LIMIT 要查询的记录数 OFFSET 起始的位置;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="DCL"><a href="#DCL" class="headerlink" title="DCL"></a>DCL</h3><p>(data control language)：创建数据库的使用用户，及其访问权限<br>localhost——指只有当前主机，%指所有主机</p>
+<h4 id="用户控制"><a href="#用户控制" class="headerlink" title="用户控制"></a>用户控制</h4><p>查询用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use mysql;</span><br><span class="line">select *from user;</span><br></pre></td></tr></table></figure>
+
+<p>创建用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create user &#x27;用户名&#x27;@&#x27;主机名&#x27; identified by &#x27;密码&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>修改用户密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter user &#x27;用户名&#x27;@&#x27;主机名&#x27; identified with mysql_native_password by &#x27;新密码&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>删除用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop user &#x27;用户名&#x27;@&#x27;主机名&#x27;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="权限控制"><a href="#权限控制" class="headerlink" title="权限控制"></a>权限控制</h4><p>all表示所有的权限<br>![[权限展示.png]]</p>
+<p>查询权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show grants for &#x27;用户名&#x27;@&#x27;主机名&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>授予权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">grant 权限列表 on 数据库名.表名 to &#x27;用户名&#x27;@&#x27;主机名&#x27; identified by &#x27;用户密码&#x27; with grant option;</span><br><span class="line"></span><br><span class="line">## 授予权限后要刷新</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+
+<p>撤销权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">revoke 权限列表 on 数据库名.表名 from &#x27;用户名&#x27;@&#x27;主机名&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>函数</p>
+<h2 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h2><p>在模糊查询之类的里边进行拼接</p>
+<p>使用方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">select +函数（）;</span><br><span class="line">#拼接</span><br><span class="line">select concat(&#x27;hello&#x27;,&#x27;mysql&#x27;);</span><br><span class="line">#全部变成小写</span><br><span class="line">select lower(&#x27;hello&#x27;);</span><br><span class="line">#全部变成大写</span><br><span class="line">select upper(&#x27;hello&#x27;);</span><br><span class="line">#填充lpad,在左边填充达到n个字符</span><br><span class="line">select lpad(&#x27;01&#x27;,5,&#x27;-&#x27;);#执行结果是---01;</span><br><span class="line">#rpad类似于lpad只不过填充在右边</span><br><span class="line">select rpad(&#x27;字符串1&#x27;,总数,&#x27;字符串2&#x27;)#字符串2是填充的内容</span><br><span class="line">#trim 去除字符串首尾的空格</span><br><span class="line">select trim(字符串);</span><br><span class="line">#substring</span><br><span class="line">select substring(字符串，起始位置，从起始位置往后数几个);</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="数值函数"><a href="#数值函数" class="headerlink" title="数值函数"></a>数值函数</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#向上取整</span><br><span class="line">ceil(x);</span><br><span class="line">#向下取整</span><br><span class="line">floor(x);</span><br><span class="line">#返回x%y的值</span><br><span class="line">mod(x/y);</span><br><span class="line">#返回0-1的随机数</span><br><span class="line">rand();</span><br><span class="line">#求参数x的四舍五入的值，保留y位小数</span><br><span class="line">round(x,y);</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="日期函数"><a href="#日期函数" class="headerlink" title="日期函数"></a>日期函数</h2><p>&#x3D;&#x3D;时间可以自己构造,形式’2022-13-14’&#x3D;&#x3D;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#返回当前日期</span><br><span class="line">curdate();</span><br><span class="line">#返回当前时间</span><br><span class="line">curtime();</span><br><span class="line">#返回当前日期和时间</span><br><span class="line">now();</span><br><span class="line">#获得指定的date的年份</span><br><span class="line">year(date);</span><br><span class="line">#获得指定data的月份</span><br><span class="line">month(date);</span><br><span class="line">#获得指定data的日期</span><br><span class="line">day(date);</span><br><span class="line">#返回一个日期/时间值加上一个时间间隔expxr后的时间值</span><br><span class="line">date_add(date,interval expr type);</span><br><span class="line">#type 不写就是天，还可以写month year;</span><br><span class="line"></span><br><span class="line">#返回起始时间date 1 和结束时间date2 之间的天数</span><br><span class="line">datediff(时间一，时间二);</span><br><span class="line">#最后的结果是时间1-时间2</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="流程函数"><a href="#流程函数" class="headerlink" title="流程函数"></a>流程函数</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">如果value为<span class="literal">true</span>,就返回t否则返回f</span></span><br><span class="line">if(value,t,f);</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">如果value1不为空，返回value1,否则返回value2</span></span><br><span class="line">ifnull(value1,value2);</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">类似于<span class="built_in">return</span> a&gt;b:a?b;</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">如果value1为<span class="literal">true</span>返回res1....否则返回defalut</span></span><br><span class="line">case when[value1] then [res1]....else[default] end</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">类似<span class="keyword">if</span> elseif <span class="keyword">else</span>但是返回多个</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">如果<span class="built_in">expr</span>的值等于value1，返回res1，否则返回defalut默认值</span></span><br><span class="line">case[expr] when [val] then [res1]....else[default] end;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">只返回一个</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">类似于switch <span class="keyword">case</span></span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p>对数据进行限制<br><strong>mysql不支持检查约束</strong><br>约束用于限制存储数据的规则，确保表中数据的正确性、有效性和完整性。<strong>约束作用于表中的字段上，可以在创建表或修改表时添加约束。</strong><br>常见的约束类型包括：</p>
+<ul>
+<li><p>非空约束（NOT NULL）：限制字段的值不能为NULL。</p>
+</li>
+<li><p>唯一约束（UNIQUE）：保证字段值的唯一性，不重复。</p>
+</li>
+<li><p>默认约束（DEFAULT）：设置字段的默认值，在存储数据时，如果输入的数据不符合约束，就使用该默认值。</p>
+</li>
+<li><p>主键约束（PRIMARY KEY）：定义主键，作为一行数据的唯一标识，要求非空且唯一。</p>
+</li>
+<li><p>检查约束（CHECK）：对字段的值进行条件检查，保证满足指定的条件。</p>
+</li>
+<li><p>外键约束（FOREIGN KEY）：建立两张表之间的联系，确保关联表中的外键值在主表中存在。<br>在创建表或修改表时，可以添加这些约束来限制字段的取值范围，保证数据的完整性和正确性。</p>
+</li>
+</ul>
+<h2 id="外键添加"><a href="#外键添加" class="headerlink" title="外键添加"></a>外键添加</h2><p>外键用于建立两张表之间的关联关系。可以在创建表时添加外键约束，也可以在后续通过修改表的方式添加外键约束。</p>
+<p>属于跨表的约束<br>创建外键约束的语法如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-- 在创建表时创建外键约束</span><br><span class="line">CONSTRAINT 外键名称 FOREIGN KEY (外键字段名) REFERENCES 主表(主键字段名)</span><br><span class="line"></span><br><span class="line">-- 后续修改表时添加外键约束</span><br><span class="line">ALTER TABLE 表名 ADD CONSTRAINT 外键名称 FOREIGN KEY (外键字段名) REFERENCES 主表(主键字段名);</span><br><span class="line"></span><br><span class="line">-- 取消外键的链接</span><br><span class="line">ALTER TABLE 表名 DROP FOREIGN KEY 外键名称</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="外键中的删除和更新"><a href="#外键中的删除和更新" class="headerlink" title="外键中的删除和更新"></a>外键中的删除和更新</h3><p>在父表中更新或删除对应记录时，可能会影响到子表中的外键关联。可以通过设置外键的删除和更新规则来处理这种情况。<br>常见的处理方式包括：</p>
+<ul>
+<li><p>NO ACTION：不允许在父表中更新或删除对应记录，如果有外键关联则不允许操作。</p>
+</li>
+<li><p>RESTRICT：与NO ACTION相同，在MySQL中等价。</p>
+</li>
+<li><p>CASCADE：在父表中更新或删除对应记录时，同时更新或删除子表中外键关联的记录。</p>
+</li>
+<li><p>SET NULL：在父表中更新或删除对应记录时，将子表中外键列设为NULL。</p>
+</li>
+<li><p>SET DEFAULT：在父表中更新或删除对应记录时，将子表中外键列设为默认值（仅适用于非InnoDB存储引擎）。<br>使用方法如下：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE 表名 ADD CONSTRAINT (外键字段) REFERENCES 主表名(主字段名) ON UPDATE [更新时的处理方式] ON DELETE [删除时的处理方式]</span><br></pre></td></tr></table></figure>
+
+<p><strong>多表查询</strong></p>
+<h2 id="多表关系"><a href="#多表关系" class="headerlink" title="多表关系"></a>多表关系</h2><p>数据库中的多表关系有三种：</p>
+<ul>
+<li><p>一对多关系（多对一关系）：在多的一方建立外键，表示一个主表记录对应多个从表记录。</p>
+</li>
+<li><p>多对多关系：通过第三张中间表维护多对多关系，表示主表记录和从表记录之间的多对多关系。</p>
+</li>
+<li><p>一对一关系：通过设置唯一性约束来表示一对一关系。</p>
+</li>
+</ul>
+<h2 id="多表查询"><a href="#多表查询" class="headerlink" title="多表查询"></a>多表查询</h2><p>多表查询是指在查询过程中同时操作多张表，以获取所需的数据。常见的多表查询包括连接查询、子查询和联合查询。<br><strong>把不经常和经常使用的数据分开可以一定程度上减少表的复杂程度并且有利于查询（字段少）</strong></p>
+<h3 id="连接查询"><a href="#连接查询" class="headerlink" title="连接查询"></a>连接查询</h3><p>连接查询用于将多个表进行关联查询，得到符合条件的数据。<br><strong>内连接</strong>：返回两个表中交集部分的数据。</p>
+<ul>
+<li>隐式内连接：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT 字段列表 FROM 表一, 表二 WHERE 条件 ...</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>显式内连接：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT 字段列表 FROM 表一 [INNER] JOIN 表二 ON 连接条件 ...</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><strong>外连接</strong>：返回指定表的所有数据，以及与其他表的交集部分数据。</p>
+<ul>
+<li>左外连接：返回左表的所有数据，以及与右表的交集部分数据。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT 字段列表 FROM 表一 LEFT [OUTER] JOIN 表二 ON 条件 ...</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>右外连接：返回右表的所有数据，以及与左表的交集部分数据。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT 字段列表 FROM 表一 RIGHT [OUTER] JOIN 表二 ON 条件 ...</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><strong>子连接</strong>：在查询中嵌套查询，实现对自身表的查询。</p>
+<p>根据子查询的结果不同判断的也不同</p>
+<p>-<br>单行单列：即结果只有一个值用”&#x3D;“</p>
+<p>-<br>多行单列：结果多个值  用in</p>
+<p>-<br>多行多列 作为表<br>例子：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 字段 <span class="keyword">from</span> (子查询) <span class="keyword">where</span> 条件;</span><br><span class="line"><span class="keyword">select</span> 字段 <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span>  条件(子查询)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="联合查询"><a href="#联合查询" class="headerlink" title="联合查询"></a>联合查询</h3><p>联合查询将多次查询的结果合并起来。使用UNION操作符可以将多个SELECT语句的结果集合并为一个结果集。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT 字段列表 FROM 表a</span><br><span class="line">UNION [ALL] -- ALL表示保留重复记录</span><br><span class="line">SELECT 字段列表 FROM 表b</span><br></pre></td></tr></table></figure>
+
+
+<p>注意：进行联合查询时，要确保每个SELECT语句的字段列表一致，类型兼容。</p>
+<p>事务<br>事务是指一组操作被视为一个工作单元，要么全部成功提交，<br>要么全部失败回滚。事务能够保证数据的一致性和完整性。</p>
+<h2 id="事务操作"><a href="#事务操作" class="headerlink" title="事务操作"></a>事务操作</h2><p>在MySQL中，可以通过设置自动提交和手动提交来控制事务的提交方式。</p>
+<p>-<br>设置自动提交：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-- 查看当前事务提交方式</span><br><span class="line">SELECT @@autocommit;</span><br><span class="line"></span><br><span class="line">-- 设置自动提交</span><br><span class="line">SET @@autocommit = 1; -- 1表示自动提交，0表示手动提交</span><br></pre></td></tr></table></figure>
+
+
+
+<p>-<br>手动提交：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-- 开始一个事务</span><br><span class="line">START TRANSACTION; -- 或者使用 BEGIN</span><br><span class="line"></span><br><span class="line">-- 提交事务</span><br><span class="line">COMMIT;</span><br><span class="line"></span><br><span class="line">-- 回滚事务</span><br><span class="line">ROLLBACK;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="事务四大特性"><a href="#事务四大特性" class="headerlink" title="事务四大特性"></a>事务四大特性</h2><p>事务具有四大特性（ACID）：</p>
+<ul>
+<li><p>原子性（Atomicity）：事务是一个不可再分割的工作单元，要么全部执行成功，要么全部不执行。</p>
+</li>
+<li><p>一致性（Consistency）：事务执行前后，数据库的状态应保持一致。</p>
+</li>
+<li><p>隔离性（Isolation）：并发执行的事务之间应该相互隔离，一个事务执行过程中的中间结果对其他事务是不可见的。</p>
+</li>
+<li><p>持久性（Durability）：事务提交后，其结果应该永久保存在数据库中。</p>
+</li>
+</ul>
+<h2 id="事务并发问题"><a href="#事务并发问题" class="headerlink" title="事务并发问题"></a>事务并发问题</h2><p>事务并发可能会引发以下问题：</p>
+<ul>
+<li><p>脏读（Dirty Read）：一个事务读取到了另一个事务尚未提交的数据。</p>
+</li>
+<li><p>不可重复读（Non-repeatable Read）：一个事务多次读取同一数据，在事务执行期间，数据被其他事务修改，导致两次读取的结果不一致。</p>
+</li>
+<li><p>幻读（Phantom Read）：一个事务多次查询同一个范围的数据，在事务执行期间，其他事务插入或删除了满足条件的数据，导致查询结果发生变化。</p>
+</li>
+</ul>
+<p>为了解决并发问题，可以通过设置事务的隔离级别来控制事务之间的交互。</p>
+<h2 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h2><p>数据库事务的隔离级别用于控制事务之间的交互和并发操作。</p>
+<p>MySQL支持如下四个隔离级别：</p>
+<ul>
+<li><p>READ UNCOMMITTED（读未提交）：最低级别，事务可以读取未提交的数据，可能会出现脏读、不可重复读和幻读。</p>
+</li>
+<li><p>READ COMMITTED（读已提交）：默认隔离级别，事务只能读取已提交的数据，可以避免脏读，但仍可能出现不可重复读和幻读。</p>
+</li>
+<li><p>REPEATABLE READ（可重复读）：事务开始时创建一个快照，读取数据时只能读取该快照中的数据，可以避免脏读和不可重复读，但仍可能出现幻读。</p>
+</li>
+<li><p>SERIALIZABLE（串行化）</p>
+</li>
+</ul>
+<p>复习</p>
+<h2 id="mysql的安装和初始化配置"><a href="#mysql的安装和初始化配置" class="headerlink" title="mysql的安装和初始化配置"></a>mysql的安装和初始化配置</h2><p>数据库：存储数据的仓库，英文DataBase</p>
+<p>数据库管理系统：MySQL等软件。简称DBM</p>
+<p>sql：结构化的查询语句，操作关系型数据库的编程语言</p>
+<p>常见的数据库</p>
+<p>配置文件</p>
+<p>名称为my.ini</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">[mysql]</span></span><br><span class="line"><span class="attr">default-character-set</span>=<span class="string">utf8</span></span><br><span class="line"></span><br><span class="line"><span class="attr">[mysqld]</span></span><br><span class="line"><span class="attr">character-set-server</span>=<span class="string">utf8</span></span><br><span class="line"><span class="attr">default-storage-engine</span>=<span class="string">INNODB</span></span><br><span class="line"><span class="attr">sql_mode</span>=<span class="string">STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>上面代码意思就是配置数据库的默认编码集为utf - 8和默认存储引擎为INNODB。</strong></p>
+<p>初始化</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqld --initialize-insecure</span><br></pre></td></tr></table></figure>
+
+
+
+<p>mysql注册成为服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqld -install</span><br></pre></td></tr></table></figure>
+
+
+
+<p>修改默认账户密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqladmin -u root password 密码</span><br></pre></td></tr></table></figure>
+
+
+
+<p>登录参数</p>
+<p>mysql -u用户名 -p密码 -h要连接的mysql服务器的ip地址(默认127.0.0.1) -P端口号(默认3306)</p>
+<p><strong>#表示单行注释</strong></p>
+<h2 id="自带数据库"><a href="#自带数据库" class="headerlink" title="自带数据库"></a>自带数据库</h2><p>information_schema 表示可视化的数据库</p>
+<p>mysql 内含权限，安全等信息</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lvren.xyz">旅人</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lvren.xyz/2024/05/05/mysql%E5%9F%BA%E7%A1%80/">https://lvren.xyz/2024/05/05/mysql%E5%9F%BA%E7%A1%80/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lvren.xyz" target="_blank">旅人</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%9F%BA%E7%A1%80/">基础</a><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><a class="post-meta__tags" href="/tags/mysql/">mysql</a></div><div class="post-share"><div class="social-share" data-image="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/05/06/jdbc%E5%85%A5%E9%97%A8/" title="jdbc入门"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">jdbc入门</div></div><div class="info-2"><div class="info-item-1">jdbc就是使用java语言操作关系型数据库的一套api 各个不同的关系型数据库实现jdbc接口 因此java程序员可以通过同一套代码实现操作不同的数据库 而各个关系型数据库的实现类就是常说的驱动 使用-注册驱动 1Class.forName(&quot;com.mysql.jdbc.Driver&quot;);    -获取连接 1Connection conn = DriverManager.getConnection(url, username, password);    Java代码需要发送SQL给MySQL服务端，就需要先建立连接 -定义SQL语句 1String sql =  “update…” ;    -获取执行SQL对象 执行SQL语句需要SQL执行对象，而这个执行对象就是Statement对象 1Statement stmt = conn.createStatement();    -执行SQL 1stmt.executeUpdate(sql);    -处理返回结果 -释放资源 事物实现具体代码实现如下： 1234567891011121314151617...</div></div></div></a><a class="pagination-related" href="/2022/11/12/%E5%9B%BE/" title="图"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">图</div></div><div class="info-2"><div class="info-item-1">邻接表最小生成树最小生成树的两种算法核心思想都是贪心 普利姆算法思路：整个算法分为三步  预准备数组初始化  找与当前边相接的最短的打印且储存  更新最小权值的数组  唯一最小生成树无论从哪个节点出发生成的树都是一样的   所以我们从0出发  这只是最基本的方法，有很大的优化空间  完整代码 1234567891011121314void Kruskal() &amp;#123;	EDG b[20];//*(&amp;b[0])@10	int markz[10] = &amp;#123;0&amp;#125;;	int size = EDGinit(b);	printf(&quot;\n&quot;);	sort(size, b);	int start, end;	for (int i = 0; i  b.b[k][j]) &amp;#123;				shortest[j] = b.b[k][j];				adjek[j] = k;			&amp;#125;		&amp;#125;//k为上处的k，即为与当前节点最相近的节点//因为是贪心算法，所以当当前节点与a节点的权值要小于名...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2024/05/06/jdbc%E5%85%A5%E9%97%A8/" title="jdbc入门"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-06</div><div class="info-item-2">jdbc入门</div></div><div class="info-2"><div class="info-item-1">jdbc就是使用java语言操作关系型数据库的一套api 各个不同的关系型数据库实现jdbc接口 因此java程序员可以通过同一套代码实现操作不同的数据库 而各个关系型数据库的实现类就是常说的驱动 使用-注册驱动 1Class.forName(&quot;com.mysql.jdbc.Driver&quot;);    -获取连接 1Connection conn = DriverManager.getConnection(url, username, password);    Java代码需要发送SQL给MySQL服务端，就需要先建立连接 -定义SQL语句 1String sql =  “update…” ;    -获取执行SQL对象 执行SQL语句需要SQL执行对象，而这个执行对象就是Statement对象 1Statement stmt = conn.createStatement();    -执行SQL 1stmt.executeUpdate(sql);    -处理返回结果 -释放资源 事物实现具体代码实现如下： 1234567891011121314151617...</div></div></div></a><a class="pagination-related" href="/2024/06/25/html/" title="html"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-25</div><div class="info-item-2">html</div></div><div class="info-2"><div class="info-item-1">标签123|    |     12345    ****    div和span123        超链接1    target 可选 _self 和 _blank，前者是在当前窗口打开，后者是新开窗口。 锚点链接1    在被跳转的标签加上 id 并保持 id 与跳转名一致。 特殊字符表格标签12345|  || --- || 姓名 | 年龄 | 评价 |    分割标签更好的分清表格结构 12345            跨行合并：rowspan&#x3D;&quot;合并单元格的个数&quot; 跨列合并: colspan&#x3D;&quot;合并单元格的个数&quot; 列表标签12345678910111213 -    -      输入标签css css 选择器基础选择器 标签选择器  类选择器（class）   可以有多类名，在 class 中用空格隔开  id 选择器  以 #+id 名来选择  id 具有唯一性  通配符   *，一般用于消除某某通用属性 文字样式1234567/* font-family: 字体 *//* font-size: 字号 *...</div></div></div></a><a class="pagination-related" href="/2024/06/09/spring/" title="spring"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-09</div><div class="info-item-2">spring</div></div><div class="info-2"><div class="info-item-1"> Core Container这个模块是spring框架中最核心的部分，其他所有模块都是依赖它运行的。看到容器（装对象的），根据这样的一个结构设计来看，spirng是用来管对象的技术  是AOP(面向切面编程)模块设计型的概念。具体是做什么的呢？它可以在不惊动原始程序的基础上，给它增强功能，aspect也是对aop思想进行了实现  Data Access 是和我们与数据库交互相关的内容  web 和spring mvc相关  test 用于快速测试，单例测试：就是对一个一个的方法进行测试的模式   核心概念 IOC控制反转&#x2F;DI在controller中要使用Service 所以我们需要由既要创建controller，又要使得controller创建的时候要带上Service，将controller内部加上Service的过程就是DI（依赖注入） 配置文件注入方式id是方便IOC容器查找的class指明这个类在项目中的位置 123           从容器中拿到对应的类 123ApplicationContext context = new ClassPathXmlAp...</div></div></div></a><a class="pagination-related" href="/2025/02/15/DDIA%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" title="DDIA第一部分"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-15</div><div class="info-item-2">DDIA第一部分</div></div><div class="info-2"><div class="info-item-1">原始数据库最基本的功能：将数据存入库 和 将数据从库里取出 数据结构的处理由此引出了我们存入库和取出库时对于数据结构的处理 分为了静态与动态处理  静态:如mysql 存进去的时候就已经限定好了一个是一个二维的对象  动态:如文档型数据库 里边的内容拿出来的时候要自定义解析的情况   如何存储 世界上最简单的数据库123456789#!/bin/bashdb_set () &amp;#123;  echo &quot;$1,$2&quot; &gt;&gt; database&amp;#125;db_get () &amp;#123;  grep &quot;^$1,&quot; database | sed -e &quot;s/^$1,//&quot; | tail -n 1&amp;#125;   上述的代码完成了一个极极极极简的数据库,存入数据时的复杂度是O(n),相当于一个单向链表，也相当于是一个日志 在DDIA中日志并非指的是我们在后端项目中用于记录各种操作的日志文件,指的其实是一份仅追加文件 散列索引因为在上述的简单数据库中，取出数据的时候只能使用从头到尾扫描的方式...</div></div></div></a><a class="pagination-related" href="/2024/06/05/redis%E5%9F%BA%E7%A1%80/" title="redis基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-05</div><div class="info-item-2">redis基础</div></div><div class="info-2"><div class="info-item-1">优势: -性能极高 – Redis能读的速度是110000次&#x2F;s,写的速度是81000次&#x2F;s 。使用的是内存读写。单线程 -丰富的数据类型 – Redis支持二进制案例的 Strings, Lists, Hashes, Sets 及 Ordered Sets 数据类型操作。 -原子 – Redis的所有操作都是原子性的，同时Redis还支持对几个操作全并后的原子性执行。丰富的特性 – Redis还支持 publish&#x2F;subscribe, 通知, key 过期等等特性。 数据结构  String字符串  List集合  set集合  zset集合  Hash散列  bitmap  GEO地理位置信息  Stream消息队列   string基本指令  set key value 设置值 get key  返回值 setnx key value 当key不存在的时候设置key的值 MSET key value 同时设置一个或者多个key的值 MSETNX key value 同时设置一个或者多个key的值,当所有给定的key都不存在的时候 hashHD...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">旅人</div><div class="author-info-description">技术栈也是栈</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/whrgg" target="_blank" title="fab fa-github"><i class="Github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%96%E8%80%85%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%AE%A1%E7%90%86%E4%B8%AD%E7%9A%84%E6%9C%8D%E5%8A%A1%E6%89%93%E5%BC%80%E3%80%82"><span class="toc-number">1.</span> <span class="toc-text">或者可以通过计算机管理中的服务打开。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E8%AF%AD%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">通用语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">4.</span> <span class="toc-text">SQL的分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DDL%EF%BC%88%E6%95%B0%E6%8D%AE%E5%AE%9A%E4%B9%89%E8%AF%AD%E8%A8%80%EF%BC%89%EF%BC%9A%E7%94%A8%E4%BA%8E%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E5%BA%93%E3%80%81%E8%A1%A8%E5%92%8C%E5%AD%97%E6%AE%B5%E7%AD%89"><span class="toc-number">4.1.</span> <span class="toc-text">DDL（数据定义语言）：用于定义数据库、表和字段等</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="toc-number">4.1.1.</span> <span class="toc-text">数据库操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">4.1.2.</span> <span class="toc-text">表操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DML%EF%BC%88%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C%E8%AF%AD%E8%A8%80%EF%BC%89%EF%BC%9A%E7%94%A8%E4%BA%8E%E5%AF%B9%E6%95%B0%E6%8D%AE%E8%BF%9B%E8%A1%8C%E5%A2%9E%E3%80%81%E5%88%A0%E3%80%81%E6%94%B9"><span class="toc-number">4.2.</span> <span class="toc-text">DML（数据操作语言）：用于对数据进行增、删、改</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E%E6%95%B0%E6%8D%AE"><span class="toc-number">4.2.1.</span> <span class="toc-text">新增数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE"><span class="toc-number">4.2.2.</span> <span class="toc-text">修改数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE"><span class="toc-number">4.2.3.</span> <span class="toc-text">删除数据</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DQL%EF%BC%88%E6%95%B0%E6%8D%AE%E6%9F%A5%E8%AF%A2%E8%AF%AD%E8%A8%80%EF%BC%89%EF%BC%9A%E7%94%A8%E4%BA%8E%E6%9F%A5%E8%AF%A2%E6%95%B0%E6%8D%AE"><span class="toc-number">4.3.</span> <span class="toc-text">DQL（数据查询语言）：用于查询数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%9F%A5%E8%AF%A2"><span class="toc-number">4.3.1.</span> <span class="toc-text">基础查询</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%88%AB%E5%90%8D"><span class="toc-number">4.3.2.</span> <span class="toc-text">设置别名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%BB%E9%99%A4%E9%87%8D%E5%A4%8D%E8%AE%B0%E5%BD%95"><span class="toc-number">4.3.3.</span> <span class="toc-text">去除重复记录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2"><span class="toc-number">4.3.4.</span> <span class="toc-text">条件查询</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DCL"><span class="toc-number">4.4.</span> <span class="toc-text">DCL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E6%8E%A7%E5%88%B6"><span class="toc-number">4.4.1.</span> <span class="toc-text">用户控制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="toc-number">4.4.2.</span> <span class="toc-text">权限控制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text">字符串函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E5%80%BC%E5%87%BD%E6%95%B0"><span class="toc-number">6.</span> <span class="toc-text">数值函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E6%9C%9F%E5%87%BD%E6%95%B0"><span class="toc-number">7.</span> <span class="toc-text">日期函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E5%87%BD%E6%95%B0"><span class="toc-number">8.</span> <span class="toc-text">流程函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%A6%E6%9D%9F"><span class="toc-number">9.</span> <span class="toc-text">约束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%96%E9%94%AE%E6%B7%BB%E5%8A%A0"><span class="toc-number">10.</span> <span class="toc-text">外键添加</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%96%E9%94%AE%E4%B8%AD%E7%9A%84%E5%88%A0%E9%99%A4%E5%92%8C%E6%9B%B4%E6%96%B0"><span class="toc-number">10.1.</span> <span class="toc-text">外键中的删除和更新</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%A1%A8%E5%85%B3%E7%B3%BB"><span class="toc-number">11.</span> <span class="toc-text">多表关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2"><span class="toc-number">12.</span> <span class="toc-text">多表查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2"><span class="toc-number">12.1.</span> <span class="toc-text">连接查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2"><span class="toc-number">12.2.</span> <span class="toc-text">联合查询</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E6%93%8D%E4%BD%9C"><span class="toc-number">13.</span> <span class="toc-text">事务操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%9B%9B%E5%A4%A7%E7%89%B9%E6%80%A7"><span class="toc-number">14.</span> <span class="toc-text">事务四大特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98"><span class="toc-number">15.</span> <span class="toc-text">事务并发问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-number">16.</span> <span class="toc-text">隔离级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E9%85%8D%E7%BD%AE"><span class="toc-number">17.</span> <span class="toc-text">mysql的安装和初始化配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%B8%A6%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">18.</span> <span class="toc-text">自带数据库</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/20/Agent%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="Agent 工作流模式与工程实践">Agent 工作流模式与工程实践</a><time datetime="2026-07-20T05:00:00.000Z" title="发表于 2026-07-20 13:00:00">2026-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/20/LangGraph%E5%9B%BE%E7%BC%96%E6%8E%92-%E8%BE%B9-Send%E4%B8%8ECommand/" title="LangGraph 图编排：边、Send 与 Command">LangGraph 图编排：边、Send 与 Command</a><time datetime="2026-07-20T04:00:00.000Z" title="发表于 2026-07-20 12:00:00">2026-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/20/LangGraph%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86-State-Reducer%E4%B8%8EMessage/" title="LangGraph 状态管理：State、Reducer 与 Message">LangGraph 状态管理：State、Reducer 与 Message</a><time datetime="2026-07-20T03:00:00.000Z" title="发表于 2026-07-20 11:00:00">2026-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/20/LangGraph%E5%85%A5%E9%97%A8-%E7%94%A8%E6%9C%89%E5%90%91%E5%9B%BE%E6%8A%8AAgent%E8%B7%91%E8%B5%B7%E6%9D%A5/" title="LangGraph 入门：用有向图把 Agent 跑起来">LangGraph 入门：用有向图把 Agent 跑起来</a><time datetime="2026-07-20T02:00:00.000Z" title="发表于 2026-07-20 10:00:00">2026-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/" title="RAG：用检索增强生成打破大模型的知识局限">RAG：用检索增强生成打破大模型的知识局限</a><time datetime="2026-04-01T16:00:00.000Z" title="发表于 2026-04-02 00:00:00">2026-04-02</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By 旅人</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.6.0"></script><script src="/js/main.js?v=5.6.0"></script><div class="js-pjax"><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.innerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+
+    setTimeout(() => URL.revokeObjectURL(url), 5000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    // Clean up previous event listeners and pending frames
+    if (wrap.__mermaidAbortController) {
+      wrap.__mermaidAbortController.abort()
+      if (wrap.__mermaidRafId) cancelAnimationFrame(wrap.__mermaidRafId)
+    }
+    const ac = new AbortController()
+    wrap.__mermaidAbortController = ac
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+    // Disable default gestures to prevent scroll chaining and pinch-zoom penetration in Chrome
+    svg.style.touchAction = 'none'
+
+    // Cache BoundingClientRect, throttled on scroll to reduce reflow
+    let cachedRect = svg.getBoundingClientRect()
+    let rectDirty = false
+    const markRectDirty = () => { rectDirty = true }
+    window.addEventListener('resize', markRectDirty, { signal: ac.signal })
+    window.addEventListener('scroll', markRectDirty, { signal: ac.signal, capture: true })
+    const getRect = () => {
+      if (rectDirty) {
+        cachedRect = svg.getBoundingClientRect()
+        rectDirty = false
+      }
+      return cachedRect
+    }
+
+    // Precompute clamp bounds from initial viewBox
+    const minW = initVb[2] * 0.1
+    const maxW = initVb[2] * 10
+    const minH = initVb[3] * 0.1
+    const maxH = initVb[3] * 10
+    const clampVb = vb => {
+      const out = vb.slice()
+      out[2] = clamp(out[2], minW, maxW)
+      out[3] = clamp(out[3], minH, maxH)
+      return out
+    }
+
+    // Throttle DOM updates using requestAnimationFrame
+    let pendingVb = null
+    let rafId = null
+    const applyVb = () => {
+      if (pendingVb) {
+        wrap.__mermaidCurViewBox = pendingVb
+        setSvgViewBox(svg, pendingVb)
+        pendingVb = null
+      }
+      rafId = null
+      wrap.__mermaidRafId = null
+    }
+    const setCurVb = vb => {
+      pendingVb = clampVb(vb)
+      if (!rafId) {
+        rafId = requestAnimationFrame(applyVb)
+        wrap.__mermaidRafId = rafId
+      }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      lastPointerX: 0,
+      lastPointerY: 0
+    }
+
+    const onPointerDown = e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      const curVb = wrap.__mermaidCurViewBox
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      if (state.pointers.size === 1) {
+        state.startVb = curVb.slice()
+        state.lastPointerX = e.clientX
+        state.lastPointerY = e.clientY
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = curVb.slice()
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = state.pointers.values().next().value
+        const dxClient = p.x - state.lastPointerX
+        const dyClient = p.y - state.lastPointerY
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+        const dx = dxClient * (curVb[2] / rect.width)
+        const dy = dyClient * (curVb[3] / rect.height)
+        setCurVb([curVb[0] - dx, curVb[1] - dy, curVb[2], curVb[3]])
+        return
+      }
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const px = curVb[0] + (cx - rect.left) * (curVb[2] / rect.width)
+        const py = curVb[1] + (cy - rect.top) * (curVb[3] / rect.height)
+        setCurVb(zoomAtPoint(state.startVb, factor, px, py))
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      // Release PointerCapture to avoid event capture anomalies
+      if (svg.hasPointerCapture && svg.hasPointerCapture(e.pointerId)) {
+        svg.releasePointerCapture(e.pointerId)
+      }
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+      } else if (state.pointers.size === 1) {
+        const p = state.pointers.values().next().value
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+      }
+    }
+
+    const onWheel = e => {
+      // Prevent event bubbling from triggering external scroll
+      e.preventDefault()
+      e.stopPropagation()
+      // Normalize deltaY across deltaMode (Chrome uses pixels, Safari uses lines)
+      let delta = e.deltaY
+      if (e.deltaMode === 1) delta *= 16
+      else if (e.deltaMode === 2) delta *= 400
+
+      // Continuous zoom factor: smoother than fixed 1.1/0.9 steps
+      const zoomFactor = Math.pow(1.001, delta)
+
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      const px = curVb[0] + (e.clientX - rect.left) * (curVb[2] / rect.width)
+      const py = curVb[1] + (e.clientY - rect.top) * (curVb[3] / rect.height)
+      setCurVb(zoomAtPoint(curVb, zoomFactor, px, py))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (init) setCurVb(init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown, { signal: ac.signal })
+    svg.addEventListener('pointermove', onPointerMove, { signal: ac.signal })
+    svg.addEventListener('pointerup', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('pointercancel', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('wheel', onWheel, { passive: false, signal: ac.signal })
+    svg.addEventListener('dblclick', onDblClick, { signal: ac.signal })
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      // Clean up event listeners before removing old SVG
+      if (item.__mermaidAbortController) {
+        item.__mermaidAbortController.abort()
+      }
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      let config = {}
+      try {
+        config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      } catch (e) {
+        console.warn('[mermaid] failed to parse dataset.config:', e)
+      }
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (true) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (true) attachMermaidViewerButton(item)
+      }
+
+      const handleError = err => {
+        console.error(`[mermaid] render failed for block #${index}:`, err)
+        const errorEl = document.createElement('div')
+        errorEl.className = 'mermaid-error'
+        errorEl.textContent = `Mermaid render error: ${err.message || err}`
+        mermaidSrc.insertAdjacentElement('afterend', errorEl)
+      }
+
+      try {
+        const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+        // mermaid v9 and v10 compatibility
+        if (typeof renderFn === 'string') {
+          renderMermaid(renderFn)
+        } else {
+          renderFn.then(({ svg }) => renderMermaid(svg)).catch(handleError)
+        }
+      } catch (err) {
+        handleError(err)
+      }
+    })
+  }
+
+  const codeToMermaid = $article => {
+    const codeMermaidEle = $article.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    const $article = document.getElementById('article-container')
+    if (!$article) return
+
+    if (false) codeToMermaid($article)
+    const $mermaid = $article.querySelectorAll('.mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.16.0/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

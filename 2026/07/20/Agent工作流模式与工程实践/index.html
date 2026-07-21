@@ -1,0 +1,707 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Agent 工作流模式与工程实践 | 旅人</title><meta name="author" content="旅人"><meta name="copyright" content="旅人"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="LangGraph 给了你把 Agent 建模成图的能力，但「图长什么样」仍然需要你设计。 LangChain 文档总结了五种常见的工作流模式，覆盖了从简单流水线到复杂多 Agent 协作的大部分场景。选对模式，比堆更多 prompt 有效得多。  Agent 的核心等式在聊模式之前，先对齐 Agent 是什么：  Agent &#x3D; LLM + Tools + Memory + Plann">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent 工作流模式与工程实践">
+<meta property="og:url" content="https://lvren.xyz/2026/07/20/Agent%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:site_name" content="旅人">
+<meta property="og:description" content="LangGraph 给了你把 Agent 建模成图的能力，但「图长什么样」仍然需要你设计。 LangChain 文档总结了五种常见的工作流模式，覆盖了从简单流水线到复杂多 Agent 协作的大部分场景。选对模式，比堆更多 prompt 有效得多。  Agent 的核心等式在聊模式之前，先对齐 Agent 是什么：  Agent &#x3D; LLM + Tools + Memory + Plann">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q1.qlogo.cn/g?b=qq&nk=2186840198&s=640">
+<meta property="article:published_time" content="2026-07-20T05:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-20T05:00:00.000Z">
+<meta property="article:author" content="旅人">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="LangChain">
+<meta property="article:tag" content="LangGraph">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q1.qlogo.cn/g?b=qq&nk=2186840198&s=640"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Agent 工作流模式与工程实践",
+  "url": "https://lvren.xyz/2026/07/20/Agent%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/",
+  "image": "https://q1.qlogo.cn/g?b=qq&nk=2186840198&s=640",
+  "datePublished": "2026-07-20T05:00:00.000Z",
+  "dateModified": "2026-07-20T05:00:00.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "旅人",
+      "url": "https://lvren.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/B2FDB3678D6ADE4257B261B0D08160C0.gif"><link rel="canonical" href="https://lvren.xyz/2026/07/20/Agent%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.6.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Agent 工作流模式与工程实践',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.2"></head><body><div class="bg-animation" id="web_bg" style="background: [object Object];"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于作者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/B2FDB3678D6ADE4257B261B0D08160C0.gif" alt="Logo"><span class="site-name">旅人</span></a><a class="nav-page-title" href="/"><span class="site-name">Agent 工作流模式与工程实践</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于作者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Agent 工作流模式与工程实践</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-20T05:00:00.000Z" title="发表于 2026-07-20 13:00:00">2026-07-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-20T05:00:00.000Z" title="更新于 2026-07-20 13:00:00">2026-07-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AI-LLM/">AI/LLM</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>LangGraph 给了你把 Agent 建模成图的能力，但「图长什么样」仍然需要你设计。</p>
+<p>LangChain 文档总结了五种常见的工作流模式，覆盖了从简单流水线到复杂多 Agent 协作的大部分场景。选对模式，比堆更多 prompt 有效得多。</p>
+<hr>
+<h2 id="Agent-的核心等式"><a href="#Agent-的核心等式" class="headerlink" title="Agent 的核心等式"></a>Agent 的核心等式</h2><p>在聊模式之前，先对齐 Agent 是什么：</p>
+<blockquote>
+<p><strong>Agent &#x3D; LLM + Tools + Memory + Planning</strong></p>
+</blockquote>
+<ul>
+<li><strong>LLM</strong> 是大脑</li>
+<li><strong>Tools</strong> 是手脚——描述写得好不好，直接决定 Agent 能不能正确行动</li>
+<li><strong>Memory</strong> 提供记忆力</li>
+<li><strong>Planning</strong> 决定逻辑能力</li>
+</ul>
+<p>Agent loop 本质上就是一个 while 循环：推理 → 调工具 → 写回上下文 → 再推理，直到达到目标或停止。</p>
+<p>Agent 面临的现实问题：</p>
+<ol>
+<li><strong>记忆</strong> — 上下文窗口有限，长任务容易忘</li>
+<li><strong>烧 token</strong> — 每轮循环都在消耗</li>
+<li><strong>推理路径易失效</strong> — 走偏了就是资源浪费</li>
+</ol>
+<hr>
+<h2 id="五种工作流模式"><a href="#五种工作流模式" class="headerlink" title="五种工作流模式"></a>五种工作流模式</h2><h3 id="1-Prompt-Chaining（提示链）"><a href="#1-Prompt-Chaining（提示链）" class="headerlink" title="1. Prompt Chaining（提示链）"></a>1. Prompt Chaining（提示链）</h3><p>每步在前一步输出上增强，类似建造者模式。每步职责不同。</p>
+<p><strong>例子</strong>：生成小说 → 检查剧情连贯 → 检查人物关系 → 检查格式。</p>
+<p>适合<strong>步骤固定、每步可独立验证</strong>的任务。路径 predetermined，不需要 LLM 动态决策。</p>
+<p>LangGraph 里用 <code>add_edge</code> 串起来就行——上一步的输出作为下一步的输入，State 里的字段逐步丰富。</p>
+<h3 id="2-Parallelization（并行化）"><a href="#2-Parallelization（并行化）" class="headerlink" title="2. Parallelization（并行化）"></a>2. Parallelization（并行化）</h3><p>两个用途：</p>
+<ul>
+<li><strong>任务拆解并行</strong> — 把大任务拆成子任务同时跑，加快速度</li>
+<li><strong>多次运行增强可靠性</strong> — 同一任务跑多次取最优</li>
+</ul>
+<p><strong>例子</strong>：</p>
+<ul>
+<li>系统 bug 检查：权限控制、并发安全、数据一致性并行排查</li>
+<li>性能测试：不同测试集同时跑，评估框架表现</li>
+</ul>
+<p>和 Send API 配合就是 LangGraph 里的 Map-Reduce。同一个 Super-step 里，没有依赖关系的节点会自动并行执行。</p>
+<h3 id="3-Routing（路由）"><a href="#3-Routing（路由）" class="headerlink" title="3. Routing（路由）"></a>3. Routing（路由）</h3><p>即<strong>意图识别</strong>——根据输入决定走哪条路径。</p>
+<p><strong>例子</strong>：用户问「帮我查订单」→ 订单查询 Agent；问「系统挂了怎么办」→ 故障诊断 Agent。</p>
+<p>Routing 关注的是<strong>识别</strong>，不是任务分解。和 Orchestrator-worker 容易混淆，但目的不同——Routing 是「你是谁的问题」，Orchestrator 是「这个问题怎么拆」。</p>
+<p>条件入口的典型写法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">route_by_intent</span>(<span class="params">state</span>) -&gt; <span class="type">Literal</span>[<span class="string">&quot;order_agent&quot;</span>, <span class="string">&quot;sre_agent&quot;</span>]:</span><br><span class="line">    intent = classify(state[<span class="string">&quot;messages&quot;</span>][-<span class="number">1</span>].content)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;order_agent&quot;</span> <span class="keyword">if</span> intent == <span class="string">&quot;order&quot;</span> <span class="keyword">else</span> <span class="string">&quot;sre_agent&quot;</span></span><br><span class="line"></span><br><span class="line">graph.add_conditional_edges(START, route_by_intent)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-Orchestrator-Worker（编排者-工作者）"><a href="#4-Orchestrator-Worker（编排者-工作者）" class="headerlink" title="4. Orchestrator-Worker（编排者-工作者）"></a>4. Orchestrator-Worker（编排者-工作者）</h3><p>一个主脑分派任务给子系统：</p>
+<ul>
+<li>将任务分解为子任务</li>
+<li>委托给 Worker 执行</li>
+<li>汇总 Worker 输出为最终结果</li>
+</ul>
+<p>和 Parallelization 的区别：并行化的路径是<strong>固定的</strong>，Orchestrator-worker 的路径由主脑<strong>动态生成</strong>——多了一个前置节点来规划和分发。</p>
+<p><strong>例子</strong>：SRE Agent 里 Supervisor 拆分故障主题 → 多个 RCA Worker 并行诊断 → 汇总报告。</p>
+<h3 id="5-Evaluator-Optimizer（评估-优化）"><a href="#5-Evaluator-Optimizer（评估-优化）" class="headerlink" title="5. Evaluator-Optimizer（评估-优化）"></a>5. Evaluator-Optimizer（评估-优化）</h3><p>迭代系统：一个 LLM 生成，另一个 LLM 评估，不通过就反复迭代。</p>
+<p>适合<strong>质量要求高、可以客观评估</strong>的场景，比如代码生成、文档撰写。</p>
+<hr>
+<h2 id="模式选型速查"><a href="#模式选型速查" class="headerlink" title="模式选型速查"></a>模式选型速查</h2><table>
+<thead>
+<tr>
+<th>你的需求</th>
+<th>推荐模式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>固定步骤流水线</td>
+<td>Prompt Chaining</td>
+</tr>
+<tr>
+<td>同一任务要多角度&#x2F;多次跑</td>
+<td>Parallelization</td>
+</tr>
+<tr>
+<td>根据输入类型分流</td>
+<td>Routing</td>
+</tr>
+<tr>
+<td>复杂任务要拆分派活</td>
+<td>Orchestrator-Worker</td>
+</tr>
+<tr>
+<td>输出质量要迭代打磨</td>
+<td>Evaluator-Optimizer</td>
+</tr>
+<tr>
+<td>LLM 自己决定下一步</td>
+<td>动态 Agent（ReAct 循环）</td>
+</tr>
+</tbody></table>
+<p>实际项目经常是<strong>混合使用</strong>——比如 Orchestrator-Worker 做顶层调度，每个 Worker 内部是 ReAct 循环，最后 Evaluator 做质量把关。</p>
+<hr>
+<h2 id="Agent-的思考范式"><a href="#Agent-的思考范式" class="headerlink" title="Agent 的思考范式"></a>Agent 的思考范式</h2><p>除了工作流模式，Agent 的「思考逻辑」也有几种经典范式：</p>
+<p><strong>ReAct</strong> — 根据反馈执行下一步。灵活，适合动态环境。</p>
+<p><strong>Plan-and-Execute</strong> — LLM 先生成全局分步计划，再逐步执行。适合长期任务，但动态调整和容错不如 ReAct。</p>
+<p><strong>最佳组合</strong>：Plan-and-Execute 生成全局任务，执行阶段用 ReAct 增加动态调整能力。</p>
+<p><strong>Reflection</strong> — 在关键节点加反思：</p>
+<ul>
+<li>「真的吗？」— Reflexion 框架，失败后反思避免重复错误</li>
+<li>「有改进方法吗？」— Self-Refine，任务完成后自我优化</li>
+<li>「结果正常吗？」— CRITIC，引入外部工具验证（比如 AI 说某人做了某事，先用 search 工具核实）</li>
+</ul>
+<p><strong>Multi-Agent</strong> — 两种组织形式：</p>
+<ul>
+<li><strong>主从模式（Orchestrator-Subagent）</strong> — 一个 Agent 全局规划分发，子 Agent 执行</li>
+<li><strong>并行模式（P2P）</strong> — 多个 Agent 对等协作，典型如 Grok 圆桌会议</li>
+</ul>
+<p>实际项目里，Plan-and-Execute + ReAct 的组合很常见：先用 Plan 生成全局任务清单（适合长期任务），执行每个子任务时用 ReAct 增加动态调整（适合应对意外）。Reflection 则在关键节点加质量关卡——不是每一步都反思，只在「输出给用户之前」和「工具调用失败之后」加，性价比最高。</p>
+<hr>
+<h2 id="ToolNode：框架帮你包装的工具节点"><a href="#ToolNode：框架帮你包装的工具节点" class="headerlink" title="ToolNode：框架帮你包装的工具节点"></a>ToolNode：框架帮你包装的工具节点</h2><p>LangGraph 提供了 <code>ToolNode</code> 类来包装工具调用节点，内置：</p>
+<ul>
+<li><strong>并发控制</strong> — 多个 tool_calls 可以并行执行</li>
+<li><strong>失败重试</strong> — 工具调用失败自动重试</li>
+</ul>
+<p>比自己手写 <code>tool_node</code> 更健壮，生产环境推荐直接用。</p>
+<hr>
+<h2 id="工程兜底：JSON-输出清洗"><a href="#工程兜底：JSON-输出清洗" class="headerlink" title="工程兜底：JSON 输出清洗"></a>工程兜底：JSON 输出清洗</h2><p>DeepSeek 等模型的 JSON 约束容易出问题——没有 strict 模式约束字段，只有 <code>bind(response_format={&quot;type&quot;: &quot;json_object&quot;})</code> 告诉模型用 JSON 返回，但<strong>有型无神</strong>，字段经常乱。</p>
+<p>一套三层兜底流程：</p>
+<h3 id="第一层：语法兜底"><a href="#第一层：语法兜底" class="headerlink" title="第一层：语法兜底"></a>第一层：语法兜底</h3><p>AI 输出多是 markdown 格式，先剥掉代码块外壳，提取最外层 <code>{...}</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_json_object</span>(<span class="params">text: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    text = strip_code_fence(text)</span><br><span class="line">    start = text.find(<span class="string">&quot;&#123;&quot;</span>)</span><br><span class="line">    end = text.rfind(<span class="string">&quot;&#125;&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> start != -<span class="number">1</span> <span class="keyword">and</span> end != -<span class="number">1</span> <span class="keyword">and</span> end &gt; start:</span><br><span class="line">        <span class="keyword">return</span> text[start : end + <span class="number">1</span>]</span><br><span class="line">    <span class="keyword">return</span> text</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="第二层：结构兜底"><a href="#第二层：结构兜底" class="headerlink" title="第二层：结构兜底"></a>第二层：结构兜底</h3><p>JSON 解析失败时，把错误上下文追加到 message 里，让 AI 重新生成：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">call_with_json_retry</span>(<span class="params">system_prompt, human_content, schema, max_retries=<span class="number">2</span></span>):</span><br><span class="line">    messages = [SystemMessage(system_prompt), HumanMessage(human_content)]</span><br><span class="line">    last_err = <span class="literal">None</span></span><br><span class="line">    <span class="keyword">for</span> attempt <span class="keyword">in</span> <span class="built_in">range</span>(max_retries + <span class="number">1</span>):</span><br><span class="line">        raw = json_llm.invoke(messages)</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            cleaned = extract_json(raw.content)</span><br><span class="line">            <span class="keyword">return</span> schema.model_validate_json(cleaned)</span><br><span class="line">        <span class="keyword">except</span> (json.JSONDecodeError, ValidationError) <span class="keyword">as</span> e:</span><br><span class="line">            last_err = e</span><br><span class="line">            messages.append(AIMessage(raw.content))</span><br><span class="line">            messages.append(HumanMessage(</span><br><span class="line">                <span class="string">f&quot;上面的输出不是合法 JSON，错误：<span class="subst">&#123;e&#125;</span>\n&quot;</span></span><br><span class="line">                <span class="string">f&quot;请严格按照示例格式重新输出，只输出 JSON。&quot;</span></span><br><span class="line">            ))</span><br><span class="line">    <span class="keyword">raise</span> last_err</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="第三层：业务兜底"><a href="#第三层：业务兜底" class="headerlink" title="第三层：业务兜底"></a>第三层：业务兜底</h3><p>所有重试仍失败时，<strong>不能让整个流程崩掉</strong>——给一个安全默认值，让 Agent 继续跑。</p>
+<hr>
+<h2 id="Tools、MCP-与-Skills"><a href="#Tools、MCP-与-Skills" class="headerlink" title="Tools、MCP 与 Skills"></a>Tools、MCP 与 Skills</h2><p>Tools 在 Agent 里注册给大模型时，统一用 <strong>JSON Schema</strong> 描述自己。分两类：</p>
+<ul>
+<li><strong>Function Call</strong> — 本地函数，直接注册</li>
+<li><strong>MCP（Model Context Protocol）</strong> — 对 LLM 来说类似一套 TCP 协议，Agent 启动时向 MCP 服务请求函数列表，后续携带进上下文</li>
+</ul>
+<p>MCP 和本地 Function Call 的区别在于<strong>解耦</strong>——工具逻辑在独立服务里，Agent 只管调用。</p>
+<p><strong>Skills</strong> 是给 AI 用的经验包——不是传统编程的 if-else，而是自然语言编码的 workflow。灵活的地方不在 skill 本身，而在 Agent <strong>选择使用哪个 skill</strong> 的判断。</p>
+<p>Skill 的具体内容就是 workflow，只是用自然语言编码。实际并没有多自由——自由的是 Agent 选择使用哪个 skill。还有检查类、规范类、报告模板类的 skill，各自服务不同环节。</p>
+<p>MCP 对 LLM 来说类似一套 TCP 协议：Agent 启动时向配置中的 MCP 服务发请求，收到函数 JSON 和说明，后续携带进上下文即可调用。和本地 Function Call 比，MCP 实现了<strong>解耦</strong>——工具逻辑在独立进程里，Agent 只管调用接口。</p>
+<hr>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lvren.xyz">旅人</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lvren.xyz/2026/07/20/Agent%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">https://lvren.xyz/2026/07/20/Agent%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lvren.xyz" target="_blank">旅人</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/LLM/">LLM</a><a class="post-meta__tags" href="/tags/AI/">AI</a><a class="post-meta__tags" href="/tags/LangChain/">LangChain</a><a class="post-meta__tags" href="/tags/LangGraph/">LangGraph</a><a class="post-meta__tags" href="/tags/Agent/">Agent</a></div><div class="post-share"><div class="social-share" data-image="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/07/20/LangGraph%E5%9B%BE%E7%BC%96%E6%8E%92-%E8%BE%B9-Send%E4%B8%8ECommand/" title="LangGraph 图编排：边、Send 与 Command"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">LangGraph 图编排：边、Send 与 Command</div></div><div class="info-2"><div class="info-item-1">节点和 State 搞定之后，下一关是控制图的流转。 LangGraph 提供了三种层次的编排能力：边（Edge） 做常规路由，Send 做动态并行分发，Command 做「改状态 + 强制跳转」的特种操作。 日常开发里，90% 的路由用条件边就够了；但剩下 10% 的边界场景——工具强制收尾、中断恢复、子图交还父图——Command 是绕不开的。  边的四种形式边决定 Node 之间的连接方式，分两类 API：    类型 API 说明    普通边 add_edge(&quot;A&quot;, &quot;B&quot;) 固定从 A 到 B   普通入口 add_edge(START, &quot;A&quot;) 固定从 START 到 A   条件边 add_conditional_edges(...) 根据函数返回值选路   条件入口 add_conditional_edges(START, router, &#123;...&#125;) 根据条件决定从哪开始   条件判断函数可以返回节点名，也可以只返回 True/False，然后在 add_conditiona...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/07/20/LangGraph%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86-State-Reducer%E4%B8%8EMessage/" title="LangGraph 状态管理：State、Reducer 与 Message"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-20</div><div class="info-item-2">LangGraph 状态管理：State、Reducer 与 Message</div></div><div class="info-2"><div class="info-item-1">建 LangGraph 的第一件事不是写节点，而是划分 State。 State 就像一块公共笔记板：prompt、历史消息、中间结果、计数器……所有节点需要共享的数据都放在这里。字段又叫 Channel。 搞懂 State 的读写规则和 Reducer 的合并逻辑，后面写复杂 Agent 才不会乱。  State 的三层视角LangGraph 允许你为不同节点定义不同的 State 视角，但底层框架为了注入和高可用，实际是把所有 State 混合在一起的。    类型 作用    InputState 约束 invoke() 的入参，调用时只填这里定义的字段   OutputState 约束 invoke() 的返回值，result = graph.invoke(...) 只能拿到这些字段   PrivateState 内部字段，不用传给 StateGraph()，框架会自动映射   几个容易误解的点：  节点 return 时，不需要严格按 OutputState 来写——只要 return 的 key 在底层混合 State 里存在，框架就会自动更新 PrivateStat...</div></div></div></a><a class="pagination-related" href="/2026/07/20/LangGraph%E5%9B%BE%E7%BC%96%E6%8E%92-%E8%BE%B9-Send%E4%B8%8ECommand/" title="LangGraph 图编排：边、Send 与 Command"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-20</div><div class="info-item-2">LangGraph 图编排：边、Send 与 Command</div></div><div class="info-2"><div class="info-item-1">节点和 State 搞定之后，下一关是控制图的流转。 LangGraph 提供了三种层次的编排能力：边（Edge） 做常规路由，Send 做动态并行分发，Command 做「改状态 + 强制跳转」的特种操作。 日常开发里，90% 的路由用条件边就够了；但剩下 10% 的边界场景——工具强制收尾、中断恢复、子图交还父图——Command 是绕不开的。  边的四种形式边决定 Node 之间的连接方式，分两类 API：    类型 API 说明    普通边 add_edge(&quot;A&quot;, &quot;B&quot;) 固定从 A 到 B   普通入口 add_edge(START, &quot;A&quot;) 固定从 START 到 A   条件边 add_conditional_edges(...) 根据函数返回值选路   条件入口 add_conditional_edges(START, router, &#123;...&#125;) 根据条件决定从哪开始   条件判断函数可以返回节点名，也可以只返回 True/False，然后在 add_conditiona...</div></div></div></a><a class="pagination-related" href="/2026/07/20/LangGraph%E5%85%A5%E9%97%A8-%E7%94%A8%E6%9C%89%E5%90%91%E5%9B%BE%E6%8A%8AAgent%E8%B7%91%E8%B5%B7%E6%9D%A5/" title="LangGraph 入门：用有向图把 Agent 跑起来"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-20</div><div class="info-item-2">LangGraph 入门：用有向图把 Agent 跑起来</div></div><div class="info-2"><div class="info-item-1">如果你已经会用 LangChain 调模型、绑工具，但一碰到「Agent 要循环推理、要分支、要并行」就不知道怎么组织代码——LangGraph 就是为此而生的。 它不是一个 prompt 框架，而是一个编排运行时：把 Agent &#x2F; LLM 应用建模成一张有向状态图，每个节点读状态、做操作、写回状态，边决定数据往哪流。  三个关键数据结构回到 LangGraph 的核心，Everything 都可以归结为三个概念：    概念 一句话 本质    Node 数据处理的逻辑 Python 函数   Edge 决定数据流转的结构 Python 函数   State 存储数据的结构 TypedDict   Node 和 Edge 本质上都是函数——Node 接收 State 做操作，Edge 决定下一个 Node 是谁。 State 是三者中设计成本最高的：划分不好，后面加节点、加并行、加汇总都会痛苦。所以第一篇入门，第二篇就专门讲 State，不是巧合。  LangGraph 把 LLM 应用的各部分拆成节点（Node）和边（Edge）：    概念 作用    Node...</div></div></div></a><a class="pagination-related" href="/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/" title="RAG：用检索增强生成打破大模型的知识局限"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-02</div><div class="info-item-2">RAG：用检索增强生成打破大模型的知识局限</div></div><div class="info-2"><div class="info-item-1">如果你曾用 ChatGPT 问过一个它训练数据之外的问题，或者需要它根据你的专业文档生成答案，你可能就遇到了大模型的两大”绝症”：知识过时 和 幻觉问题。 RAG（Retrieval-Augmented Generation）就是为解决这些问题而生的技术方案。它不是重新训练模型，而是聪明地把 LLM 变成一个”可查阅资料的专家”。  为什么需要 RAG？大模型的四大痛点 静态知识库 - 训练数据有截止日期  幻觉问题 - 编造看起来真实的回答  领域局限 - 专业知识覆盖不完整  数据泄露 - 可能泄露训练数据信息   RAG 的核心价值：  减少幻觉，提高答案准确性  增加实时性，快速适配新数据  扩展领域知识，支持专业应用  降低数据泄露风险（配合私有部署）    RAG 的完整流程     graph LR     A[&quot;文档输入&lt;br&#x2F;&gt;PDF&#x2F;Word&#x2F;Excel&lt;br&#x2F;&gt;txt等&quot;]     B[&quot;文本分块&lt;br&#x2F;&gt;切分策略&quot;]     C[&...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">旅人</div><div class="author-info-description">技术栈也是栈</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/whrgg" target="_blank" title="fab fa-github"><i class="Github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Agent-%E7%9A%84%E6%A0%B8%E5%BF%83%E7%AD%89%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">Agent 的核心等式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E7%A7%8D%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">五种工作流模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Prompt-Chaining%EF%BC%88%E6%8F%90%E7%A4%BA%E9%93%BE%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">1. Prompt Chaining（提示链）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Parallelization%EF%BC%88%E5%B9%B6%E8%A1%8C%E5%8C%96%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">2. Parallelization（并行化）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Routing%EF%BC%88%E8%B7%AF%E7%94%B1%EF%BC%89"><span class="toc-number">2.3.</span> <span class="toc-text">3. Routing（路由）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Orchestrator-Worker%EF%BC%88%E7%BC%96%E6%8E%92%E8%80%85-%E5%B7%A5%E4%BD%9C%E8%80%85%EF%BC%89"><span class="toc-number">2.4.</span> <span class="toc-text">4. Orchestrator-Worker（编排者-工作者）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Evaluator-Optimizer%EF%BC%88%E8%AF%84%E4%BC%B0-%E4%BC%98%E5%8C%96%EF%BC%89"><span class="toc-number">2.5.</span> <span class="toc-text">5. Evaluator-Optimizer（评估-优化）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%BC%8F%E9%80%89%E5%9E%8B%E9%80%9F%E6%9F%A5"><span class="toc-number">3.</span> <span class="toc-text">模式选型速查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Agent-%E7%9A%84%E6%80%9D%E8%80%83%E8%8C%83%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">Agent 的思考范式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ToolNode%EF%BC%9A%E6%A1%86%E6%9E%B6%E5%B8%AE%E4%BD%A0%E5%8C%85%E8%A3%85%E7%9A%84%E5%B7%A5%E5%85%B7%E8%8A%82%E7%82%B9"><span class="toc-number">5.</span> <span class="toc-text">ToolNode：框架帮你包装的工具节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E7%A8%8B%E5%85%9C%E5%BA%95%EF%BC%9AJSON-%E8%BE%93%E5%87%BA%E6%B8%85%E6%B4%97"><span class="toc-number">6.</span> <span class="toc-text">工程兜底：JSON 输出清洗</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E5%B1%82%EF%BC%9A%E8%AF%AD%E6%B3%95%E5%85%9C%E5%BA%95"><span class="toc-number">6.1.</span> <span class="toc-text">第一层：语法兜底</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%B1%82%EF%BC%9A%E7%BB%93%E6%9E%84%E5%85%9C%E5%BA%95"><span class="toc-number">6.2.</span> <span class="toc-text">第二层：结构兜底</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E5%B1%82%EF%BC%9A%E4%B8%9A%E5%8A%A1%E5%85%9C%E5%BA%95"><span class="toc-number">6.3.</span> <span class="toc-text">第三层：业务兜底</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tools%E3%80%81MCP-%E4%B8%8E-Skills"><span class="toc-number">7.</span> <span class="toc-text">Tools、MCP 与 Skills</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/20/Agent%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="Agent 工作流模式与工程实践">Agent 工作流模式与工程实践</a><time datetime="2026-07-20T05:00:00.000Z" title="发表于 2026-07-20 13:00:00">2026-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/20/LangGraph%E5%9B%BE%E7%BC%96%E6%8E%92-%E8%BE%B9-Send%E4%B8%8ECommand/" title="LangGraph 图编排：边、Send 与 Command">LangGraph 图编排：边、Send 与 Command</a><time datetime="2026-07-20T04:00:00.000Z" title="发表于 2026-07-20 12:00:00">2026-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/20/LangGraph%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86-State-Reducer%E4%B8%8EMessage/" title="LangGraph 状态管理：State、Reducer 与 Message">LangGraph 状态管理：State、Reducer 与 Message</a><time datetime="2026-07-20T03:00:00.000Z" title="发表于 2026-07-20 11:00:00">2026-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/20/LangGraph%E5%85%A5%E9%97%A8-%E7%94%A8%E6%9C%89%E5%90%91%E5%9B%BE%E6%8A%8AAgent%E8%B7%91%E8%B5%B7%E6%9D%A5/" title="LangGraph 入门：用有向图把 Agent 跑起来">LangGraph 入门：用有向图把 Agent 跑起来</a><time datetime="2026-07-20T02:00:00.000Z" title="发表于 2026-07-20 10:00:00">2026-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/" title="RAG：用检索增强生成打破大模型的知识局限">RAG：用检索增强生成打破大模型的知识局限</a><time datetime="2026-04-01T16:00:00.000Z" title="发表于 2026-04-02 00:00:00">2026-04-02</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By 旅人</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.6.0"></script><script src="/js/main.js?v=5.6.0"></script><div class="js-pjax"><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.innerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+
+    setTimeout(() => URL.revokeObjectURL(url), 5000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    // Clean up previous event listeners and pending frames
+    if (wrap.__mermaidAbortController) {
+      wrap.__mermaidAbortController.abort()
+      if (wrap.__mermaidRafId) cancelAnimationFrame(wrap.__mermaidRafId)
+    }
+    const ac = new AbortController()
+    wrap.__mermaidAbortController = ac
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+    // Disable default gestures to prevent scroll chaining and pinch-zoom penetration in Chrome
+    svg.style.touchAction = 'none'
+
+    // Cache BoundingClientRect, throttled on scroll to reduce reflow
+    let cachedRect = svg.getBoundingClientRect()
+    let rectDirty = false
+    const markRectDirty = () => { rectDirty = true }
+    window.addEventListener('resize', markRectDirty, { signal: ac.signal })
+    window.addEventListener('scroll', markRectDirty, { signal: ac.signal, capture: true })
+    const getRect = () => {
+      if (rectDirty) {
+        cachedRect = svg.getBoundingClientRect()
+        rectDirty = false
+      }
+      return cachedRect
+    }
+
+    // Precompute clamp bounds from initial viewBox
+    const minW = initVb[2] * 0.1
+    const maxW = initVb[2] * 10
+    const minH = initVb[3] * 0.1
+    const maxH = initVb[3] * 10
+    const clampVb = vb => {
+      const out = vb.slice()
+      out[2] = clamp(out[2], minW, maxW)
+      out[3] = clamp(out[3], minH, maxH)
+      return out
+    }
+
+    // Throttle DOM updates using requestAnimationFrame
+    let pendingVb = null
+    let rafId = null
+    const applyVb = () => {
+      if (pendingVb) {
+        wrap.__mermaidCurViewBox = pendingVb
+        setSvgViewBox(svg, pendingVb)
+        pendingVb = null
+      }
+      rafId = null
+      wrap.__mermaidRafId = null
+    }
+    const setCurVb = vb => {
+      pendingVb = clampVb(vb)
+      if (!rafId) {
+        rafId = requestAnimationFrame(applyVb)
+        wrap.__mermaidRafId = rafId
+      }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      lastPointerX: 0,
+      lastPointerY: 0
+    }
+
+    const onPointerDown = e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      const curVb = wrap.__mermaidCurViewBox
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      if (state.pointers.size === 1) {
+        state.startVb = curVb.slice()
+        state.lastPointerX = e.clientX
+        state.lastPointerY = e.clientY
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = curVb.slice()
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = state.pointers.values().next().value
+        const dxClient = p.x - state.lastPointerX
+        const dyClient = p.y - state.lastPointerY
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+        const dx = dxClient * (curVb[2] / rect.width)
+        const dy = dyClient * (curVb[3] / rect.height)
+        setCurVb([curVb[0] - dx, curVb[1] - dy, curVb[2], curVb[3]])
+        return
+      }
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const px = curVb[0] + (cx - rect.left) * (curVb[2] / rect.width)
+        const py = curVb[1] + (cy - rect.top) * (curVb[3] / rect.height)
+        setCurVb(zoomAtPoint(state.startVb, factor, px, py))
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      // Release PointerCapture to avoid event capture anomalies
+      if (svg.hasPointerCapture && svg.hasPointerCapture(e.pointerId)) {
+        svg.releasePointerCapture(e.pointerId)
+      }
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+      } else if (state.pointers.size === 1) {
+        const p = state.pointers.values().next().value
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+      }
+    }
+
+    const onWheel = e => {
+      // Prevent event bubbling from triggering external scroll
+      e.preventDefault()
+      e.stopPropagation()
+      // Normalize deltaY across deltaMode (Chrome uses pixels, Safari uses lines)
+      let delta = e.deltaY
+      if (e.deltaMode === 1) delta *= 16
+      else if (e.deltaMode === 2) delta *= 400
+
+      // Continuous zoom factor: smoother than fixed 1.1/0.9 steps
+      const zoomFactor = Math.pow(1.001, delta)
+
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      const px = curVb[0] + (e.clientX - rect.left) * (curVb[2] / rect.width)
+      const py = curVb[1] + (e.clientY - rect.top) * (curVb[3] / rect.height)
+      setCurVb(zoomAtPoint(curVb, zoomFactor, px, py))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (init) setCurVb(init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown, { signal: ac.signal })
+    svg.addEventListener('pointermove', onPointerMove, { signal: ac.signal })
+    svg.addEventListener('pointerup', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('pointercancel', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('wheel', onWheel, { passive: false, signal: ac.signal })
+    svg.addEventListener('dblclick', onDblClick, { signal: ac.signal })
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      // Clean up event listeners before removing old SVG
+      if (item.__mermaidAbortController) {
+        item.__mermaidAbortController.abort()
+      }
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      let config = {}
+      try {
+        config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      } catch (e) {
+        console.warn('[mermaid] failed to parse dataset.config:', e)
+      }
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (true) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (true) attachMermaidViewerButton(item)
+      }
+
+      const handleError = err => {
+        console.error(`[mermaid] render failed for block #${index}:`, err)
+        const errorEl = document.createElement('div')
+        errorEl.className = 'mermaid-error'
+        errorEl.textContent = `Mermaid render error: ${err.message || err}`
+        mermaidSrc.insertAdjacentElement('afterend', errorEl)
+      }
+
+      try {
+        const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+        // mermaid v9 and v10 compatibility
+        if (typeof renderFn === 'string') {
+          renderMermaid(renderFn)
+        } else {
+          renderFn.then(({ svg }) => renderMermaid(svg)).catch(handleError)
+        }
+      } catch (err) {
+        handleError(err)
+      }
+    })
+  }
+
+  const codeToMermaid = $article => {
+    const codeMermaidEle = $article.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    const $article = document.getElementById('article-container')
+    if (!$article) return
+
+    if (false) codeToMermaid($article)
+    const $mermaid = $article.querySelectorAll('.mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.16.0/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
