@@ -182,6 +182,40 @@
     document.querySelectorAll('.card-waymark').forEach(mount)
   }
 
+  const copyText = async text => {
+    try {
+      await navigator.clipboard.writeText(text)
+      return true
+    } catch (_) {
+      const input = document.createElement('textarea')
+      input.value = text
+      input.setAttribute('readonly', '')
+      input.style.position = 'fixed'
+      input.style.left = '-9999px'
+      document.body.appendChild(input)
+      input.select()
+      const ok = document.execCommand('copy')
+      input.remove()
+      return ok
+    }
+  }
+
+  document.addEventListener('click', async event => {
+    const btn = event.target.closest('[data-copy]')
+    if (!btn) return
+    event.preventDefault()
+    const text = btn.getAttribute('data-copy')
+    if (!text) return
+    const ok = await copyText(text)
+    if (!ok) return
+    const original = btn.dataset.label || btn.textContent
+    btn.dataset.label = original
+    btn.textContent = '已复制'
+    window.setTimeout(() => {
+      btn.textContent = original
+    }, 1400)
+  })
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot, { once: true })
   } else {
