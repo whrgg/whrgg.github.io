@@ -360,22 +360,38 @@ code, kbd, pre, samp,
 }
 
 #footer {
-  background-color: var(--sketch-paper-alt);
+  background-color: var(--sketch-dark) !important;
+  background-image: url(/img/foot.jpg) !important;
+  background-position: center bottom !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
   border-top: 2px dashed var(--sketch-dark);
 }
 
 #footer:before {
-  background-color: rgba(245, 240, 232, 0.55);
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(44, 44, 44, 0.28);
+  pointer-events: none;
 }
 
 #footer-wrap,
-#footer-wrap a {
-  color: var(--sketch-dark);
+#footer-wrap a,
+#footer .footer-copyright,
+#footer .footer-copyright a,
+#footer .copyright,
+#footer .framework-info,
+#footer .framework-info a {
+  color: var(--sketch-paper);
   font-family: var(--sketch-font-body);
 }
 
-#footer-wrap a:hover {
-  text-decoration: underline wavy var(--sketch-dark);
+#footer-wrap a:hover,
+#footer .framework-info a:hover,
+#footer .footer-copyright a:hover {
+  color: var(--sketch-paper);
+  text-decoration: underline wavy var(--sketch-paper);
 }
 
 .avatar-img {
@@ -593,7 +609,7 @@ select:focus {
 }
 
 [data-theme="dark"] #footer:before {
-  background-color: rgba(28, 26, 22, 0.55);
+  background-color: rgba(28, 26, 22, 0.42);
 }
 
 [data-theme="dark"] #page-header.not-top-img #nav,

@@ -180,6 +180,9 @@
 
   const boot = () => {
     document.querySelectorAll('.card-waymark').forEach(mount)
+    document.querySelectorAll('#footer .copyright').forEach(el => {
+      el.innerHTML = '&copy;2022 - 2026 By 旅人'
+    })
   }
 
   const copyText = async text => {
