@@ -599,6 +599,272 @@ select:focus {
   border-bottom-color: var(--sketch-dark);
 }
 
+#aside-content .card-widget.card-waymark,
+#aside-content .card-widget.card-waymark:nth-child(odd),
+#aside-content .card-widget.card-waymark:nth-child(even),
+#aside-content .card-widget.card-waymark:hover,
+#aside-content .card-widget.card-waymark:active {
+  transform: none;
+  overflow: visible;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.card-waymark .item-headline i {
+  color: var(--sketch-red);
+}
+
+.waymark-stage {
+  position: relative;
+  margin-top: 8px;
+}
+
+.waymark-stack {
+  position: relative;
+  min-height: 248px;
+}
+
+.waymark-sheet {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px 14px 18px;
+  border: 2px dashed var(--sketch-dark);
+  border-radius: 2px;
+  background-color: var(--sketch-paper);
+  background-image: var(--sketch-texture);
+  color: var(--sketch-dark);
+  text-align: left;
+  cursor: grab;
+  user-select: none;
+  box-shadow: 2px 2px 0 rgba(44, 44, 44, 0.28);
+  transform-origin: 12% 8%;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.waymark-sheet:focus-visible {
+  outline: 2px dashed var(--sketch-red);
+  outline-offset: 3px;
+}
+
+.waymark-sheet.is-top {
+  z-index: 5;
+  transform: rotate(-1.8deg);
+  cursor: grab;
+}
+
+.waymark-sheet.is-top:hover {
+  transform: rotate(-2.6deg) translate(-1px, -1px);
+}
+
+.waymark-sheet.is-top:active {
+  cursor: grabbing;
+  transform: rotate(0.6deg);
+}
+
+.waymark-sheet.is-next {
+  z-index: 4;
+  transform: rotate(1.8deg) translate(8px, 22px);
+  box-shadow: 2px 2px 0 rgba(44, 44, 44, 0.18);
+}
+
+.waymark-sheet.is-deep {
+  z-index: 3;
+  transform: rotate(-0.9deg) translate(-6px, 38px);
+  box-shadow: 1px 1px 0 rgba(44, 44, 44, 0.12);
+}
+
+.waymark-sheet.is-tearing {
+  z-index: 9;
+  pointer-events: none;
+  animation: waymark-tear 0.42s ease-in forwards;
+}
+
+.waymark-sheet.is-hidden {
+  display: none;
+}
+
+.waymark-tape {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 44px;
+  height: 11px;
+  margin-left: -22px;
+  border: 2px dashed var(--sketch-dark);
+  background: rgba(44, 44, 44, 0.07);
+  transform: rotate(-4deg);
+  pointer-events: none;
+}
+
+.waymark-when {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--sketch-font-display);
+  font-style: italic;
+  font-size: 0.78em;
+  color: var(--sketch-muted);
+}
+
+.waymark-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 10px;
+  font-family: var(--sketch-font-body);
+}
+
+.waymark-label {
+  font-family: var(--sketch-font-display);
+  font-style: italic;
+  font-size: 0.78em;
+  color: var(--sketch-muted);
+}
+
+.waymark-row a {
+  color: var(--sketch-dark);
+  text-decoration: underline wavy var(--sketch-red);
+  text-underline-offset: 4px;
+}
+
+.waymark-row a:hover {
+  background: var(--sketch-dark);
+  color: var(--sketch-paper);
+  text-decoration-color: var(--sketch-paper);
+}
+
+.waymark-pack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.waymark-pack a {
+  border: 2px dashed var(--sketch-dark);
+  border-radius: 2px;
+  padding: 0 8px;
+  text-decoration: none;
+  min-height: 32px;
+  line-height: 28px;
+  font-size: 0.85em;
+}
+
+.waymark-pack a:hover {
+  background: var(--sketch-dark);
+  color: var(--sketch-paper);
+}
+
+.waymark-quote {
+  margin: 2px 0 0;
+  font-family: var(--sketch-font-display);
+  font-style: italic;
+  text-decoration: underline wavy var(--sketch-dark);
+  text-underline-offset: 6px;
+}
+
+.waymark-sheet.age-1 {
+  background-color: #efe8dc;
+}
+
+.waymark-sheet.age-2 {
+  background-color: #eadfce;
+}
+
+.waymark-sheet.age-2::before,
+.waymark-sheet.age-3::before,
+.waymark-sheet.age-4::before,
+.waymark-sheet.age-5::before {
+  content: "";
+  position: absolute;
+  left: 12%;
+  top: 38%;
+  width: 42%;
+  border-top: 1px dashed rgba(44, 44, 44, 0.28);
+  transform: rotate(-11deg);
+  pointer-events: none;
+}
+
+.waymark-sheet.age-3 {
+  background-color: #e4d6c0;
+}
+
+.waymark-sheet.age-3::after,
+.waymark-sheet.age-4::after,
+.waymark-sheet.age-5::after {
+  content: "";
+  position: absolute;
+  top: 18%;
+  right: 10%;
+  width: 16px;
+  height: 12px;
+  border-radius: 40% 60% 50% 45%;
+  background: rgba(44, 44, 44, 0.1);
+  box-shadow: -28px 46px 0 3px rgba(92, 64, 38, 0.1), 8px 88px 0 2px rgba(44, 44, 44, 0.08);
+  transform: rotate(18deg);
+  pointer-events: none;
+}
+
+.waymark-sheet.age-4,
+.waymark-sheet.age-5 {
+  background-color: #dccbb0;
+  color: #3a342c;
+}
+
+.waymark-sheet.age-4::before,
+.waymark-sheet.age-5::before {
+  width: 58%;
+  top: 28%;
+  box-shadow: 18px 42px 0 0 rgba(44, 44, 44, 0.18);
+}
+
+.waymark-sheet.age-5 {
+  background-color: #d4c09a;
+}
+
+.waymark-pad {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 42px 6px 0;
+  pointer-events: none;
+}
+
+.waymark-pad span {
+  display: block;
+  height: 0;
+  border-bottom: 2px dashed rgba(44, 44, 44, 0.28);
+}
+
+.waymark-pad span:nth-child(even) {
+  margin-left: 4px;
+  margin-right: 2px;
+}
+
+.waymark-hint {
+  margin-top: 8px;
+  font-family: var(--sketch-font-display);
+  font-style: italic;
+  font-size: 0.78em;
+  color: var(--sketch-muted);
+}
+
+@keyframes waymark-tear {
+  0% {
+    opacity: 1;
+    transform: rotate(-1.8deg);
+  }
+  35% {
+    opacity: 1;
+    transform: rotate(-9deg) translate(10px, -8px);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(16deg) translate(72px, -36px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cardHover,
   .layout > div:first-child:not(.nc),
@@ -609,7 +875,9 @@ select:focus {
   #rightside > div > button,
   #rightside > div > a,
   .avatar-img,
-  .avatar-img img {
+  .avatar-img img,
+  #aside-content .card-widget.card-waymark,
+  .waymark-sheet {
     transform: none !important;
     transition: none !important;
     animation: none !important;
