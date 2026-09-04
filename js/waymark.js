@@ -125,7 +125,7 @@
           </div>
           ${padHtml(remain.length)}
         </div>
-        <p class="waymark-hint">${remain.length > 1 ? '点纸面，撕开更早的一页' : '当一段故事结束的时候，我们总会想起它的开头'}</p>
+        <p class="waymark-hint">${remain.length > 1 ? '翻开过去的一页' : '当一段故事结束的时候，我们总会想起它的开头'}</p>
       `
 
       const sheets = [...root.querySelectorAll('[data-role="sheet"]')]
@@ -138,7 +138,7 @@
           sheet.tabIndex = 0
           sheet.setAttribute(
             'aria-label',
-            remain.length > 1 ? `撕开当前路签，${remain[0].when}` : `当一段故事结束的时候，我们总会想起它的开头`
+            remain.length > 1 ? `翻开过去的一页，${remain[0].when}` : `当一段故事结束的时候，我们总会想起它的开头`
           )
         } else {
           sheet.setAttribute('aria-hidden', 'true')
