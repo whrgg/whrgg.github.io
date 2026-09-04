@@ -1,19 +1,19 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>RAG：用检索增强生成打破大模型的知识局限 | 旅人</title><meta name="author" content="旅人"><meta name="copyright" content="旅人"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f5f0e8"><meta name="description" content="RAG：用检索增强生成打破大模型的知识局限如果你曾用 ChatGPT 问过一个它训练数据之外的问题，或者需要它根据你的专业文档生成答案，你可能就遇到了大模型的两大”绝症”：知识过时 和 幻觉问题。 RAG（Retrieval-Augmented Generation）就是为解决这些问题而生的技术方案。它不是重新训练模型，而是聪明地把 LLM 变成一个”可查阅资料的专家”。  为什么需要 RAG？大">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>RAG：用检索增强生成打破大模型的知识局限 | 旅人</title><meta name="author" content="旅人"><meta name="copyright" content="旅人"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="如果你曾用 ChatGPT 问过一个它训练数据之外的问题，或者需要它根据你的专业文档生成答案，你可能就遇到了大模型的两大”绝症”：知识过时 和 幻觉问题。 RAG（Retrieval-Augmented Generation）就是为解决这些问题而生的技术方案。它不是重新训练模型，而是聪明地把 LLM 变成一个”可查阅资料的专家”。  为什么需要 RAG？大模型的四大痛点 静态知识库 - 训练数据有">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RAG：用检索增强生成打破大模型的知识局限">
 <meta property="og:url" content="https://lvren.xyz/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/index.html">
 <meta property="og:site_name" content="旅人">
-<meta property="og:description" content="RAG：用检索增强生成打破大模型的知识局限如果你曾用 ChatGPT 问过一个它训练数据之外的问题，或者需要它根据你的专业文档生成答案，你可能就遇到了大模型的两大”绝症”：知识过时 和 幻觉问题。 RAG（Retrieval-Augmented Generation）就是为解决这些问题而生的技术方案。它不是重新训练模型，而是聪明地把 LLM 变成一个”可查阅资料的专家”。  为什么需要 RAG？大">
+<meta property="og:description" content="如果你曾用 ChatGPT 问过一个它训练数据之外的问题，或者需要它根据你的专业文档生成答案，你可能就遇到了大模型的两大”绝症”：知识过时 和 幻觉问题。 RAG（Retrieval-Augmented Generation）就是为解决这些问题而生的技术方案。它不是重新训练模型，而是聪明地把 LLM 变成一个”可查阅资料的专家”。  为什么需要 RAG？大模型的四大痛点 静态知识库 - 训练数据有">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://q1.qlogo.cn/g?b=qq&nk=2186840198&s=640">
 <meta property="article:published_time" content="2026-04-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-02T07:47:22.771Z">
+<meta property="article:modified_time" content="2026-04-01T16:00:00.000Z">
 <meta property="article:author" content="旅人">
-<meta property="article:tag" content="RAG">
+<meta property="article:tag" content="AI">
 <meta property="article:tag" content="LLM">
+<meta property="article:tag" content="RAG">
 <meta property="article:tag" content="向量数据库">
 <meta property="article:tag" content="检索增强">
-<meta property="article:tag" content="AI">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://q1.qlogo.cn/g?b=qq&nk=2186840198&s=640"><script type="application/ld+json">{
   "@context": "https://schema.org",
@@ -22,59 +22,100 @@
   "url": "https://lvren.xyz/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/",
   "image": "https://q1.qlogo.cn/g?b=qq&nk=2186840198&s=640",
   "datePublished": "2026-04-01T16:00:00.000Z",
-  "dateModified": "2026-04-02T07:47:22.771Z",
+  "dateModified": "2026-04-01T16:00:00.000Z",
   "author": [
     {
       "@type": "Person",
       "name": "旅人",
-      "url": "https://lvren.xyz/"
+      "url": "https://lvren.xyz"
     }
   ]
-}</script><link rel="shortcut icon" href="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/B2FDB3678D6ADE4257B261B0D08160C0.gif"><link rel="canonical" href="https://lvren.xyz/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/css/sketch-style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+}</script><link rel="shortcut icon" href="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/B2FDB3678D6ADE4257B261B0D08160C0.gif"><link rel="canonical" href="https://lvren.xyz/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.6.0"><link rel="stylesheet" href="/css/sketch-style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
     (() => {
       
     const saveToLocal = {
       set: (key, value, ttl) => {
-        if (!ttl) return
-        const expiry = Date.now() + ttl * 86400000
-        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
       },
       get: key => {
         const itemStr = localStorage.getItem(key)
-        if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
           localStorage.removeItem(key)
-          return undefined
         }
-        return value
       }
     }
 
+    const scriptCache = new Map()
+    const cssCache = new Map()
     window.btf = {
       saveToLocal,
-      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
-        script.onload = script.onreadystatechange = () => {
-          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
         }
-        script.onerror = reject
-        document.head.appendChild(script)
-      }),
-      getCSS: (url, id) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onload = link.onreadystatechange = () => {
-          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
         }
-        link.onerror = reject
-        document.head.appendChild(link)
-      }),
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
       addGlobalFn: (key, fn, name = false, parent = window) => {
         if (!false && key.startsWith('pjax')) return
         const globalFn = parent.globalFn || {}
@@ -85,16 +126,17 @@
     }
   
       
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
       const activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1c1a16')
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
         }
       }
       const activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f5f0e8')
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
         }
       }
 
@@ -147,7 +189,7 @@
   lightbox: 'null',
   Snackbar: undefined,
   infinitegrid: {
-    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
     buttonText: '加载更多'
   },
   isPhotoFigcaption: false,
@@ -163,34 +205,43 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于作者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/B2FDB3678D6ADE4257B261B0D08160C0.gif" alt="Logo"></a><a class="nav-page-title" href="/"><span class="site-name">RAG：用检索增强生成打破大模型的知识局限</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于作者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">RAG：用检索增强生成打破大模型的知识局限</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-01T16:00:00.000Z" title="发表于 2026-04-02 00:00:00">2026-04-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-02T07:47:22.771Z" title="更新于 2026-04-02 15:47:22">2026-04-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AI-LLM/">AI/LLM</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="busuanzi_container_page_pv" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="RAG：用检索增强生成打破大模型的知识局限"><a href="#RAG：用检索增强生成打破大模型的知识局限" class="headerlink" title="RAG：用检索增强生成打破大模型的知识局限"></a>RAG：用检索增强生成打破大模型的知识局限</h1><p>如果你曾用 ChatGPT 问过一个它训练数据之外的问题，或者需要它根据你的专业文档生成答案，你可能就遇到了大模型的两大”绝症”：<strong>知识过时</strong> 和 <strong>幻觉问题</strong>。</p>
+}</script><meta name="generator" content="Hexo 8.1.2"></head><body><div class="bg-animation" id="web_bg" style="background: [object Object];"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">27</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于作者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/B2FDB3678D6ADE4257B261B0D08160C0.gif" alt="Logo"><span class="site-name">旅人</span></a><a class="nav-page-title" href="/"><span class="site-name">RAG：用检索增强生成打破大模型的知识局限</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于作者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">RAG：用检索增强生成打破大模型的知识局限</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-01T16:00:00.000Z" title="发表于 2026-04-02 00:00:00">2026-04-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-01T16:00:00.000Z" title="更新于 2026-04-02 00:00:00">2026-04-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AI-LLM/">AI/LLM</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>如果你曾用 ChatGPT 问过一个它训练数据之外的问题，或者需要它根据你的专业文档生成答案，你可能就遇到了大模型的两大”绝症”：<strong>知识过时</strong> 和 <strong>幻觉问题</strong>。</p>
 <p>RAG（Retrieval-Augmented Generation）就是为解决这些问题而生的技术方案。它不是重新训练模型，而是聪明地把 LLM 变成一个”可查阅资料的专家”。</p>
 <hr>
-<h2 id="为什么需要-RAG？"><a href="#为什么需要-RAG？" class="headerlink" title="为什么需要 RAG？"></a>为什么需要 RAG？</h2><h3 id="大模型的四大痛点"><a href="#大模型的四大痛点" class="headerlink" title="大模型的四大痛点"></a>大模型的四大痛点</h3><ol>
-<li>静态知识库 - 训练数据有截止日期</li>
-<li>幻觉问题 - 编造看起来真实的回答</li>
-<li>领域局限 - 专业知识覆盖不完整</li>
-<li>数据泄露 - 可能泄露训练数据信息</li>
-</ol>
+<h2 id="为什么需要-RAG？"><a href="#为什么需要-RAG？" class="headerlink" title="为什么需要 RAG？"></a>为什么需要 RAG？</h2><h3 id="大模型的四大痛点"><a href="#大模型的四大痛点" class="headerlink" title="大模型的四大痛点"></a>大模型的四大痛点</h3><ul>
+<li><p>静态知识库 - 训练数据有截止日期</p>
+</li>
+<li><p>幻觉问题 - 编造看起来真实的回答</p>
+</li>
+<li><p>领域局限 - 专业知识覆盖不完整</p>
+</li>
+<li><p>数据泄露 - 可能泄露训练数据信息</p>
+</li>
+</ul>
 <p><strong>RAG 的核心价值</strong>：</p>
 <ul>
-<li>减少幻觉，提高答案准确性</li>
-<li>增加实时性，快速适配新数据</li>
-<li>扩展领域知识，支持专业应用</li>
-<li>降低数据泄露风险（配合私有部署）</li>
+<li><p>减少幻觉，提高答案准确性</p>
+</li>
+<li><p>增加实时性，快速适配新数据</p>
+</li>
+<li><p>扩展领域知识，支持专业应用</p>
+</li>
+<li><p>降低数据泄露风险（配合私有部署）</p>
+</li>
 </ul>
 <hr>
-<h2 id="RAG-的完整流程"><a href="#RAG-的完整流程" class="headerlink" title="RAG 的完整流程"></a>RAG 的完整流程</h2><pre><code class="highlight mermaid">graph LR
-    A[&quot;文档输入&lt;br/&gt;PDF/Word/Excel&lt;br/&gt;txt等&quot;]
-    B[&quot;文本分块&lt;br/&gt;切分策略&quot;]
-    C[&quot;Embedding&lt;br/&gt;向量化&quot;]
-    D[&quot;向量数据库&lt;br/&gt;Milvus/Elasticsearch&quot;]
+<h2 id="RAG-的完整流程"><a href="#RAG-的完整流程" class="headerlink" title="RAG 的完整流程"></a>RAG 的完整流程</h2><div class="mermaid-wrap"><pre class="mermaid-src" data-config="{}" hidden>
+    graph LR
+    A[&quot;文档输入&lt;br&#x2F;&gt;PDF&#x2F;Word&#x2F;Excel&lt;br&#x2F;&gt;txt等&quot;]
+    B[&quot;文本分块&lt;br&#x2F;&gt;切分策略&quot;]
+    C[&quot;Embedding&lt;br&#x2F;&gt;向量化&quot;]
+    D[&quot;向量数据库&lt;br&#x2F;&gt;Milvus&#x2F;Elasticsearch&quot;]
 
     E[&quot;用户提问&quot;]
-    F[&quot;语义改写&lt;br/&gt;HyDE/分解问题&quot;]
-    G[&quot;多路召回&lt;br/&gt;向量+BM25混合&quot;]
-    H[&quot;重排序&lt;br/&gt;精排Top-K&quot;]
-    I[&quot;LLM生成&lt;br/&gt;基于检索结果&quot;]
+    F[&quot;语义改写&lt;br&#x2F;&gt;HyDE&#x2F;分解问题&quot;]
+    G[&quot;多路召回&lt;br&#x2F;&gt;向量+BM25混合&quot;]
+    H[&quot;重排序&lt;br&#x2F;&gt;精排Top-K&quot;]
+    I[&quot;LLM生成&lt;br&#x2F;&gt;基于检索结果&quot;]
     J[&quot;最终答案&quot;]
 
     A --&gt; B --&gt; C --&gt; D
@@ -200,7 +251,10 @@
     style A fill:#ffe6e6
     style D fill:#e6f3ff
     style E fill:#fff9e6
-    style J fill:#e6ffe6</code></pre>
+    style J fill:#e6ffe6
+  </pre></div>
+
+
 
 <h3 id="1-数据预处理：文本分块"><a href="#1-数据预处理：文本分块" class="headerlink" title="1. 数据预处理：文本分块"></a>1. 数据预处理：文本分块</h3><p>这是 RAG 系统的基础，直接影响检索精度。</p>
 <h4 id="五大经典分块策略"><a href="#五大经典分块策略" class="headerlink" title="五大经典分块策略"></a>五大经典分块策略</h4><table>
@@ -245,18 +299,25 @@
 </tbody></table>
 <h4 id="进阶方案：重叠和混合策略"><a href="#进阶方案：重叠和混合策略" class="headerlink" title="进阶方案：重叠和混合策略"></a>进阶方案：重叠和混合策略</h4><p><strong>为什么要用重叠？</strong><br>固定分块容易割裂上下文关键信息。重叠是补偿手段：</p>
 <ul>
-<li>增加的信息噪声 &lt; 重叠带来的语义连续性收益</li>
-<li>因此<strong>推荐使用重叠</strong></li>
+<li><p>增加的信息噪声 &lt; 重叠带来的语义连续性收益</p>
+</li>
+<li><p>因此<strong>推荐使用重叠</strong></p>
+</li>
 </ul>
 <p><strong>混合分块</strong>：<br>结合上述策略，例如：</p>
 <ul>
-<li>基础组合：固定分块 + 结构感知 + 递归字符分块</li>
-<li>高级组合：再加语义分块和大模型分块</li>
+<li><p>基础组合：固定分块 + 结构感知 + 递归字符分块</p>
+</li>
+<li><p>高级组合：再加语义分块和大模型分块</p>
+</li>
 </ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 伪代码：混合分块策略</span></span><br><span class="line">chunks = []</span><br><span class="line"><span class="comment"># 先按结构分割</span></span><br><span class="line"><span class="keyword">for</span> section <span class="keyword">in</span> document.sections:</span><br><span class="line">    <span class="comment"># 再按固定大小分块</span></span><br><span class="line">    <span class="keyword">for</span> chunk <span class="keyword">in</span> fixed_split(section, size=<span class="number">512</span>, overlap=<span class="number">50</span>):</span><br><span class="line">        <span class="comment"># 最后用语义相似度合并相邻段落</span></span><br><span class="line">        <span class="keyword">if</span> similar(chunk, prev_chunk) &gt; threshold:</span><br><span class="line">            merge(chunk, prev_chunk)</span><br><span class="line">        chunks.append(chunk)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 伪代码：混合分块策略</span></span><br><span class="line">chunks = []</span><br><span class="line"><span class="comment"># 先按结构分割</span></span><br><span class="line"><span class="keyword">for</span> section <span class="keyword">in</span> document.sections:</span><br><span class="line">    <span class="comment"># 再按固定大小分块</span></span><br><span class="line">    <span class="keyword">for</span> chunk <span class="keyword">in</span> fixed_split(section, size=<span class="number">512</span>, overlap=<span class="number">50</span>):</span><br><span class="line">        <span class="comment"># 最后用语义相似度合并相邻段落</span></span><br><span class="line">        <span class="keyword">if</span> similar(chunk, prev_chunk) &gt; threshold:</span><br><span class="line">            merge(chunk, prev_chunk)</span><br><span class="line">        chunks.append(chunk)</span><br></pre></td></tr></table></figure>
+
+
 
 <hr>
-<h3 id="2-向量化：把文本变成-AI-理解的语言"><a href="#2-向量化：把文本变成-AI-理解的语言" class="headerlink" title="2. 向量化：把文本变成 AI 理解的语言"></a>2. 向量化：把文本变成 AI 理解的语言</h3><h4 id="选择合适的-Embedding-模型"><a href="#选择合适的-Embedding-模型" class="headerlink" title="选择合适的 Embedding 模型"></a>选择合适的 Embedding 模型</h4><pre><code class="highlight mermaid">graph TD
+<h3 id="2-向量化：把文本变成-AI-理解的语言"><a href="#2-向量化：把文本变成-AI-理解的语言" class="headerlink" title="2. 向量化：把文本变成 AI 理解的语言"></a>2. 向量化：把文本变成 AI 理解的语言</h3><h4 id="选择合适的-Embedding-模型"><a href="#选择合适的-Embedding-模型" class="headerlink" title="选择合适的 Embedding 模型"></a>选择合适的 Embedding 模型</h4><div class="mermaid-wrap"><pre class="mermaid-src" data-config="{}" hidden>
+    graph TD
     A[&quot;Embedding 模型选择&quot;]
     B[&quot;维度&quot;]
     C[&quot;Token 数&quot;]
@@ -266,29 +327,36 @@
     A --&gt; C
     A --&gt; D
 
-    B --&gt; B1[&quot;维度越多&lt;br/&gt;信息越精细&quot;]
-    C --&gt; C1[&quot;Token 越少&lt;br/&gt;在相同维度下&lt;br/&gt;编码越精细&quot;]
-    D --&gt; D1[&quot;优先选择&lt;br/&gt;领域相关的&lt;br/&gt;微调模型&quot;]</code></pre>
+    B --&gt; B1[&quot;维度越多&lt;br&#x2F;&gt;信息越精细&quot;]
+    C --&gt; C1[&quot;Token 越少&lt;br&#x2F;&gt;在相同维度下&lt;br&#x2F;&gt;编码越精细&quot;]
+    D --&gt; D1[&quot;优先选择&lt;br&#x2F;&gt;领域相关的&lt;br&#x2F;&gt;微调模型&quot;]
+  </pre></div>
+
+
 
 <p><strong>关键指标</strong>：</p>
 <ul>
-<li>维度（Dimension）：更高 &#x3D; 信息更丰富但成本更高</li>
-<li>Token 数：相同维度下，token 少的模型编码更细致</li>
-<li>模型质量：通用模型 vs 领域微调模型</li>
+<li><p>维度（Dimension）：更高 &#x3D; 信息更丰富但成本更高</p>
+</li>
+<li><p>Token 数：相同维度下，token 少的模型编码更细致</p>
+</li>
+<li><p>模型质量：通用模型 vs 领域微调模型</p>
+</li>
 </ul>
 <hr>
-<h3 id="3-检索：找到相关的文档"><a href="#3-检索：找到相关的文档" class="headerlink" title="3. 检索：找到相关的文档"></a>3. 检索：找到相关的文档</h3><pre><code class="highlight mermaid">graph LR
+<h3 id="3-检索：找到相关的文档"><a href="#3-检索：找到相关的文档" class="headerlink" title="3. 检索：找到相关的文档"></a>3. 检索：找到相关的文档</h3><div class="mermaid-wrap"><pre class="mermaid-src" data-config="{}" hidden>
+    graph LR
     A[&quot;用户提问&quot;]
 
-    B[&quot;向量检索&lt;br/&gt;语义相似&quot;]
-    C[&quot;关键词检索&lt;br/&gt;BM25算法&quot;]
+    B[&quot;向量检索&lt;br&#x2F;&gt;语义相似&quot;]
+    C[&quot;关键词检索&lt;br&#x2F;&gt;BM25算法&quot;]
 
     D[&quot;融合策略&quot;]
 
-    E[&quot;手动加权&lt;br/&gt;0.7*向量+0.3*BM25&quot;]
-    F[&quot;模型加权&lt;br/&gt;训练小模型&lt;br/&gt;学习最优权重&quot;]
+    E[&quot;手动加权&lt;br&#x2F;&gt;0.7*向量+0.3*BM25&quot;]
+    F[&quot;模型加权&lt;br&#x2F;&gt;训练小模型&lt;br&#x2F;&gt;学习最优权重&quot;]
 
-    G[&quot;重排序&lt;br/&gt;精排Top-K&quot;]
+    G[&quot;重排序&lt;br&#x2F;&gt;精排Top-K&quot;]
 
     A --&gt; B
     A --&gt; C
@@ -302,19 +370,28 @@
     style B fill:#e6f3ff
     style C fill:#fff9e6
     style E fill:#e6ffe6
-    style F fill:#ffe6e6</code></pre>
+    style F fill:#ffe6e6
+  </pre></div>
+
+
 
 <h4 id="多路召回策略"><a href="#多路召回策略" class="headerlink" title="多路召回策略"></a>多路召回策略</h4><p>不要只依赖单一检索方式。实际应用中推荐：</p>
-<ol>
-<li><strong>向量检索</strong>：捕捉语义相似性，效果好但可能漂移</li>
-<li><strong>BM25 关键词检索</strong>：精准定位关键信息，但无法理解语义</li>
-<li><strong>混合融合</strong>：取两者之长，补两者之短</li>
-</ol>
-<h4 id="加权融合"><a href="#加权融合" class="headerlink" title="加权融合"></a>加权融合</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">相关性分数 = α × 向量相似度 + (1-α) × BM25分数</span><br><span class="line"></span><br><span class="line">三种加权方法：</span><br><span class="line">1. 手动调参：设置固定的 α 值（0.3-0.7）</span><br><span class="line">2. 机器学习：训练小模型自动学习最优权重</span><br><span class="line">3. 启发式规则：根据查询类型动态调整</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>向量检索</strong>：捕捉语义相似性，效果好但可能漂移</p>
+</li>
+<li><p><strong>BM25 关键词检索</strong>：精准定位关键信息，但无法理解语义</p>
+</li>
+<li><p><strong>混合融合</strong>：取两者之长，补两者之短</p>
+</li>
+</ul>
+<h4 id="加权融合"><a href="#加权融合" class="headerlink" title="加权融合"></a>加权融合</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">相关性分数 = α × 向量相似度 + (1-α) × BM25分数</span><br><span class="line"></span><br><span class="line">三种加权方法：</span><br><span class="line">1. 手动调参：设置固定的 α 值（0.3-0.7）</span><br><span class="line">2. 机器学习：训练小模型自动学习最优权重</span><br><span class="line">3. 启发式规则：根据查询类型动态调整</span><br></pre></td></tr></table></figure>
+
+
 
 <hr>
 <h3 id="4-语义改写：消除歧义，靠近文档"><a href="#4-语义改写：消除歧义，靠近文档" class="headerlink" title="4. 语义改写：消除歧义，靠近文档"></a>4. 语义改写：消除歧义，靠近文档</h3><p>用户的提问往往有歧义、缺少上下文，或表述不匹配文档术语。</p>
-<h4 id="三大改写技巧"><a href="#三大改写技巧" class="headerlink" title="三大改写技巧"></a>三大改写技巧</h4><pre><code class="highlight mermaid">graph TD
+<h4 id="三大改写技巧"><a href="#三大改写技巧" class="headerlink" title="三大改写技巧"></a>三大改写技巧</h4><div class="mermaid-wrap"><pre class="mermaid-src" data-config="{}" hidden>
+    graph TD
     A[&quot;语义改写的目标&quot;]
 
     B[&quot;假设性问答 HyDE&quot;]
@@ -325,32 +402,43 @@
     A --&gt; C
     A --&gt; D
 
-    B --&gt; B1[&quot;原理：用LLM生成&lt;br/&gt;假的答案/文档&lt;br/&gt;用假文档向量检索&quot;]
-    B --&gt; B2[&quot;效果：比原提问&lt;br/&gt;更接近真实文档&quot;]
+    B --&gt; B1[&quot;原理：用LLM生成&lt;br&#x2F;&gt;假的答案&#x2F;文档&lt;br&#x2F;&gt;用假文档向量检索&quot;]
+    B --&gt; B2[&quot;效果：比原提问&lt;br&#x2F;&gt;更接近真实文档&quot;]
 
-    C --&gt; C1[&quot;分解复杂问题为&lt;br/&gt;多个简单问题&lt;br/&gt;提高语义准确性&quot;]
+    C --&gt; C1[&quot;分解复杂问题为&lt;br&#x2F;&gt;多个简单问题&lt;br&#x2F;&gt;提高语义准确性&quot;]
 
-    D --&gt; D1[&quot;补全&#x27;它&#x27;&#x27;我们之前说的&#x27;&lt;br/&gt;这类代词指代&lt;br/&gt;增加上下文信息&quot;]</code></pre>
+    D --&gt; D1[&quot;补全&#39;它&#39;&#39;我们之前说的&#39;&lt;br&#x2F;&gt;这类代词指代&lt;br&#x2F;&gt;增加上下文信息&quot;]
+  </pre></div>
+
+
 
 <p><strong>HyDE 工作流</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">用户提问：「如何优化搜索引擎性能？」</span><br><span class="line">        ⬇️</span><br><span class="line">LLM 生成假答案：「搜索引擎性能优化涉及...</span><br><span class="line">              1. 索引优化，使用倒排索引...</span><br><span class="line">              2. 查询优化，采用缓存...」</span><br><span class="line">        ⬇️</span><br><span class="line">对假答案做向量检索</span><br><span class="line">        ⬇️</span><br><span class="line">找到真实相关文档</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">用户提问：「如何优化搜索引擎性能？」</span><br><span class="line">        ⬇️</span><br><span class="line">LLM 生成假答案：「搜索引擎性能优化涉及...</span><br><span class="line">              1. 索引优化，使用倒排索引...</span><br><span class="line">              2. 查询优化，采用缓存...」</span><br><span class="line">        ⬇️</span><br><span class="line">对假答案做向量检索</span><br><span class="line">        ⬇️</span><br><span class="line">找到真实相关文档</span><br></pre></td></tr></table></figure>
+
+
 
 <hr>
 <h3 id="5-重排序：让最相关的文档排第一"><a href="#5-重排序：让最相关的文档排第一" class="headerlink" title="5. 重排序：让最相关的文档排第一"></a>5. 重排序：让最相关的文档排第一</h3><p>检索出 Top-100 个候选后，用更精细的模型精排 Top-K。</p>
 <p><strong>常见重排序方案</strong>：</p>
 <ul>
-<li>交叉编码器（Cross-Encoder）：精度最高但速度慢</li>
-<li>LLM 排序：直接用 LLM 判断相关性</li>
-<li>多维度评分：综合考虑相关性、权威性、新鲜度</li>
+<li><p>交叉编码器（Cross-Encoder）：精度最高但速度慢</p>
+</li>
+<li><p>LLM 排序：直接用 LLM 判断相关性</p>
+</li>
+<li><p>多维度评分：综合考虑相关性、权威性、新鲜度</p>
+</li>
 </ul>
 <hr>
 <h2 id="结果评估：衡量-RAG-效果"><a href="#结果评估：衡量-RAG-效果" class="headerlink" title="结果评估：衡量 RAG 效果"></a>结果评估：衡量 RAG 效果</h2><h3 id="检索评测维度"><a href="#检索评测维度" class="headerlink" title="检索评测维度"></a>检索评测维度</h3><p>检索效果不等于最终答案效果。</p>
 <p>错误认知：召回了相关文档 &#x3D; 能给出好答案</p>
 <p>正确理解：需要同时衡量</p>
 <ul>
-<li>召回量：有没有都召回出来？</li>
-<li>召回质：召回的都是相关的吗？</li>
-<li>命中率：能解决实际问题吗？</li>
+<li><p>召回量：有没有都召回出来？</p>
+</li>
+<li><p>召回质：召回的都是相关的吗？</p>
+</li>
+<li><p>命中率：能解决实际问题吗？</p>
+</li>
 </ul>
 <h4 id="检索质量三问"><a href="#检索质量三问" class="headerlink" title="检索质量三问"></a>检索质量三问</h4><table>
 <thead>
@@ -376,58 +464,57 @@
 <td>人工验证：答案是否真的回答了问题？</td>
 </tr>
 </tbody></table>
-<h4 id="生成评测：忠诚度和简洁度"><a href="#生成评测：忠诚度和简洁度" class="headerlink" title="生成评测：忠诚度和简洁度"></a>生成评测：忠诚度和简洁度</h4><pre><code class="highlight mermaid">graph LR
+<h4 id="生成评测：忠诚度和简洁度"><a href="#生成评测：忠诚度和简洁度" class="headerlink" title="生成评测：忠诚度和简洁度"></a>生成评测：忠诚度和简洁度</h4><div class="mermaid-wrap"><pre class="mermaid-src" data-config="{}" hidden>
+    graph LR
     A[&quot;生成结果评测&quot;]
 
-    B[&quot;忠诚度&lt;br/&gt;是否按文档内容生成？&quot;]
-    C[&quot;简洁度&lt;br/&gt;是否简洁回复了问题？&quot;]
+    B[&quot;忠诚度&lt;br&#x2F;&gt;是否按文档内容生成？&quot;]
+    C[&quot;简洁度&lt;br&#x2F;&gt;是否简洁回复了问题？&quot;]
 
     A --&gt; B
     A --&gt; C
 
     B --&gt; B1[&quot;方法1：LLM自动评估&quot;]
-    B --&gt; B2[&quot;方法2：重叠词分析&lt;br/&gt;精确率/召回率&quot;]
+    B --&gt; B2[&quot;方法2：重叠词分析&lt;br&#x2F;&gt;精确率&#x2F;召回率&quot;]
 
     C --&gt; C1[&quot;方法1：LLM自动评估&quot;]
-    C --&gt; C2[&quot;方法2：长度/关键词&lt;br/&gt;匹配度分析&quot;]</code></pre>
+    C --&gt; C2[&quot;方法2：长度&#x2F;关键词&lt;br&#x2F;&gt;匹配度分析&quot;]
+  </pre></div>
+
+
 
 <p><strong>精确度和召回率计算</strong>（使用重叠词）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">召回率 = 标准答案中的词在回答中出现的个数 / 标准答案中的词总数</span><br><span class="line">精确率 = 回答中的词在标准答案中出现的个数 / 回答中的词总数</span><br><span class="line">F1分数 = 2 × (精确率 × 召回率) / (精确率 + 召回率)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">召回率 = 标准答案中的词在回答中出现的个数 / 标准答案中的词总数</span><br><span class="line">精确率 = 回答中的词在标准答案中出现的个数 / 回答中的词总数</span><br><span class="line">F1分数 = 2 × (精确率 × 召回率) / (精确率 + 召回率)</span><br></pre></td></tr></table></figure>
+
+
 
 <hr>
-<h2 id="向量检索的黑科技：相似度算法与索引"><a href="#向量检索的黑科技：相似度算法与索引" class="headerlink" title="向量检索的黑科技：相似度算法与索引"></a>向量检索的黑科技：相似度算法与索引</h2><h3 id="相似度计算三大算法"><a href="#相似度计算三大算法" class="headerlink" title="相似度计算三大算法"></a>相似度计算三大算法</h3><ol>
-<li><p>点积 (Dot Product)</p>
-<ul>
-<li>速度快，但对向量长度敏感</li>
-</ul>
-</li>
-<li><p>欧式距离 (Euclidean Distance)</p>
-<ul>
-<li>几何直观，计算成本中等</li>
-</ul>
-</li>
-<li><p>余弦相似度 (Cosine Similarity)</p>
-<ul>
-<li>最常用，归一化处理，范围[-1,1]</li>
-</ul>
-</li>
-</ol>
+<h2 id="向量检索的黑科技：相似度算法与索引"><a href="#向量检索的黑科技：相似度算法与索引" class="headerlink" title="向量检索的黑科技：相似度算法与索引"></a>向量检索的黑科技：相似度算法与索引</h2><h3 id="相似度计算三大算法"><a href="#相似度计算三大算法" class="headerlink" title="相似度计算三大算法"></a>相似度计算三大算法</h3><p>-<br>点积 (Dot Product)</p>
+<p>速度快，但对向量长度敏感</p>
+<p>-<br>欧式距离 (Euclidean Distance)</p>
+<p>几何直观，计算成本中等</p>
+<p>-<br>余弦相似度 (Cosine Similarity)</p>
+<p>最常用，归一化处理，范围[-1,1]</p>
 <h3 id="向量搜索加速：从暴力到-ANN"><a href="#向量搜索加速：从暴力到-ANN" class="headerlink" title="向量搜索加速：从暴力到 ANN"></a>向量搜索加速：从暴力到 ANN</h3><p>为了在大规模数据集（百万、亿级）上快速搜索，需要优化索引。</p>
-<pre><code class="highlight mermaid">graph TD
+<div class="mermaid-wrap"><pre class="mermaid-src" data-config="{}" hidden>
+    graph TD
     A[&quot;向量搜索算法&quot;]
 
-    B[&quot;暴力搜索&lt;br/&gt;时间复杂度O(n)&quot;]
-    C[&quot;近似最近邻 ANN&lt;br/&gt;牺牲精度换速度&quot;]
+    B[&quot;暴力搜索&lt;br&#x2F;&gt;时间复杂度O(n)&quot;]
+    C[&quot;近似最近邻 ANN&lt;br&#x2F;&gt;牺牲精度换速度&quot;]
 
     A --&gt; B
     A --&gt; C
 
-    C --&gt; C1[&quot;HNSW&lt;br/&gt;图索引&lt;br/&gt;层级导航&quot;]
-    C --&gt; C2[&quot;LSH&lt;br/&gt;哈希桶&lt;br/&gt;快速定位&quot;]
-    C --&gt; C3[&quot;Tree-base&lt;br/&gt;树形索引&lt;br/&gt;二分查找&quot;]
-    C --&gt; C4[&quot;Cluster-base&lt;br/&gt;簇索引&lt;br/&gt;先找簇再检索&quot;]
+    C --&gt; C1[&quot;HNSW&lt;br&#x2F;&gt;图索引&lt;br&#x2F;&gt;层级导航&quot;]
+    C --&gt; C2[&quot;LSH&lt;br&#x2F;&gt;哈希桶&lt;br&#x2F;&gt;快速定位&quot;]
+    C --&gt; C3[&quot;Tree-base&lt;br&#x2F;&gt;树形索引&lt;br&#x2F;&gt;二分查找&quot;]
+    C --&gt; C4[&quot;Cluster-base&lt;br&#x2F;&gt;簇索引&lt;br&#x2F;&gt;先找簇再检索&quot;]
 
-    C1 --&gt; P[&quot;实际效果&lt;br/&gt;HNSW通常最好&quot;]</code></pre>
+    C1 --&gt; P[&quot;实际效果&lt;br&#x2F;&gt;HNSW通常最好&quot;]
+  </pre></div>
+
+
 
 <h4 id="压缩算法：节省内存"><a href="#压缩算法：节省内存" class="headerlink" title="压缩算法：节省内存"></a>压缩算法：节省内存</h4><p>大向量模型（维度 1024+ ）消耗大量内存。压缩算法很必要。</p>
 <table>
@@ -453,81 +540,393 @@
 <h2 id="实践建议：打造高质量-RAG-系统"><a href="#实践建议：打造高质量-RAG-系统" class="headerlink" title="实践建议：打造高质量 RAG 系统"></a>实践建议：打造高质量 RAG 系统</h2><h3 id="数据清洗是基础"><a href="#数据清洗是基础" class="headerlink" title="数据清洗是基础"></a>数据清洗是基础</h3><p>垃圾进，垃圾出</p>
 <p>再好的 RAG 架构也救不了烂数据。数据清洗和规范化至少要包括：</p>
 <ul>
-<li>去除重复、错误的文本</li>
-<li>统一术语、格式规范</li>
-<li>验证数据准确性和完整性</li>
-<li>处理特殊字符和编码问题</li>
+<li><p>去除重复、错误的文本</p>
+</li>
+<li><p>统一术语、格式规范</p>
+</li>
+<li><p>验证数据准确性和完整性</p>
+</li>
+<li><p>处理特殊字符和编码问题</p>
+</li>
 </ul>
-<h3 id="四个优化方向"><a href="#四个优化方向" class="headerlink" title="四个优化方向"></a>四个优化方向</h3><ol>
-<li>纯文本 → 多模态（加入视频、图片）</li>
-<li>线性检索 → 多路并行（向量+关键词+图像）</li>
-<li>简单索引 → 高性能索引（优化向量DB）</li>
-<li>静态生成 → 循环自我修正（反馈优化）</li>
-</ol>
+<h3 id="四个优化方向"><a href="#四个优化方向" class="headerlink" title="四个优化方向"></a>四个优化方向</h3><ul>
+<li><p>纯文本 → 多模态（加入视频、图片）</p>
+</li>
+<li><p>线性检索 → 多路并行（向量+关键词+图像）</p>
+</li>
+<li><p>简单索引 → 高性能索引（优化向量DB）</p>
+</li>
+<li><p>静态生成 → 循环自我修正（反馈优化）</p>
+</li>
+</ul>
 <hr>
 <h2 id="总结：RAG-的核心心法"><a href="#总结：RAG-的核心心法" class="headerlink" title="总结：RAG 的核心心法"></a>总结：RAG 的核心心法</h2><p>RAG &#x3D; 检索 + 生成</p>
 <p>核心：把信息检索当主业，生成只是锦上添花</p>
-<ol>
-<li><p>分块很关键</p>
-<ul>
-<li>选对策略，保留语义连贯性</li>
-</ul>
-</li>
-<li><p>检索是核心</p>
-<ul>
-<li>多路召回，精排融合</li>
-</ul>
-</li>
-<li><p>改写要细致</p>
-<ul>
-<li>消除歧义，靠近文档</li>
-</ul>
-</li>
-<li><p>评估要全面</p>
-<ul>
-<li>不只看召回，看最终答案</li>
-</ul>
-</li>
-</ol>
+<p>-<br>分块很关键</p>
+<p>选对策略，保留语义连贯性</p>
+<p>-<br>检索是核心</p>
+<p>多路召回，精排融合</p>
+<p>-<br>改写要细致</p>
+<p>消除歧义，靠近文档</p>
+<p>-<br>评估要全面</p>
+<p>不只看召回，看最终答案</p>
 <h3 id="最后的建议"><a href="#最后的建议" class="headerlink" title="最后的建议"></a>最后的建议</h3><p>RAG 不是一蹴而就的技术，而是一个<strong>持续优化的过程</strong>：</p>
-<ol>
-<li><strong>从简到繁</strong>：先用固定分块 + 向量检索，再逐步加复杂度</li>
-<li><strong>从通用到专用</strong>：用通用模型验证方案，再用领域模型优化</li>
-<li><strong>闭环反馈</strong>：不断收集用户反馈，迭代评估体系和算法</li>
-<li><strong>成本优先</strong>：在保证效果的前提下，优先考虑成本和延迟</li>
-</ol>
+<ul>
+<li><p><strong>从简到繁</strong>：先用固定分块 + 向量检索，再逐步加复杂度</p>
+</li>
+<li><p><strong>从通用到专用</strong>：用通用模型验证方案，再用领域模型优化</p>
+</li>
+<li><p><strong>闭环反馈</strong>：不断收集用户反馈，迭代评估体系和算法</p>
+</li>
+<li><p><strong>成本优先</strong>：在保证效果的前提下，优先考虑成本和延迟</p>
+</li>
+</ul>
 <hr>
 <p><strong>参考资源</strong>：</p>
 <ul>
-<li>向量数据库：Milvus, Pinecone, Weaviate</li>
-<li>Embedding 模型：OpenAI API, Sentence Transformers</li>
-<li>自动评估工具：RAGAS, TruLens</li>
-<li>框架：LangChain, LlamaIndex</li>
+<li><p>向量数据库：Milvus, Pinecone, Weaviate</p>
+</li>
+<li><p>Embedding 模型：OpenAI API, Sentence Transformers</p>
+</li>
+<li><p>自动评估工具：RAGAS, TruLens</p>
+</li>
+<li><p>框架：LangChain, LlamaIndex</p>
+</li>
 </ul>
 <p>希望这篇文章能帮你理解 RAG 的全貌。如果有问题，欢迎留言讨论！</p>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lvren.xyz">旅人</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lvren.xyz/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/">https://lvren.xyz/2026/04/02/RAG-LLM-检索增强生成深度指南/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lvren.xyz" target="_blank">旅人</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/RAG/">RAG</a><a class="post-meta__tags" href="/tags/LLM/">LLM</a><a class="post-meta__tags" href="/tags/%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93/">向量数据库</a><a class="post-meta__tags" href="/tags/%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA/">检索增强</a><a class="post-meta__tags" href="/tags/AI/">AI</a></div><div class="post-share"><div class="social-share" data-image="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/04/08/%E5%A4%A7%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="大文件上传"><img class="cover" src="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/v2-93aea311db2f6f48ae7b7d961d190741_1440w.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">大文件上传</div></div><div class="info-2"><div class="info-item-1">为什么需要分片上传？对于后端来说，如果文件上传的时候采用一整个上传的方式，那么后端需要在内存中留出很大一部分空间来进行一个中转。如果文件过大，那么可能会造成内存空间的拥挤，频繁的IO造成服务器性能的下降，在web这个多并发的情况下，性能的下降会导致响应时间的增加，严重甚至会导致服务的崩溃。所以我们要对大文件的上传进行专门的优化。 同时，过大的文件传输也会长时间的占用网络信道，会导致网络的拥塞，其余的服务响应时间也会增加。 总结来说，传统整文件上传面临三个核心问题：  内存压力 — 服务端需要一次性将整个文件加载到内存中，上百MB甚至GB级的文件很容易导致OOM 网络不稳定 — 传输过程中一旦网络中断，整个文件需要重新上传，用户体验极差 上传时间过长 —...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">旅人</div><div class="author-info-description">技术栈也是栈</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/whrgg"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-waymark"><div class="item-headline"><i class="fas fa-map-signs"></i><span>路签</span></div><div class="waymark-note"><div class="waymark-row"><span class="waymark-label">此刻在走</span><a href="/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/">RAG · 检索增强</a></div><div class="waymark-row"><span class="waymark-label">背包里有</span><span class="waymark-pack"><a href="/tags/spring/">Spring</a><a href="/tags/redis/">Redis</a><a href="/categories/AI-LLM/">LLM</a></span></div><p class="waymark-quote">我自有火，何羡他人光</p></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RAG%EF%BC%9A%E7%94%A8%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%89%93%E7%A0%B4%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%9F%A5%E8%AF%86%E5%B1%80%E9%99%90"><span class="toc-text">RAG：用检索增强生成打破大模型的知识局限</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-RAG%EF%BC%9F"><span class="toc-text">为什么需要 RAG？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%9B%9B%E5%A4%A7%E7%97%9B%E7%82%B9"><span class="toc-text">大模型的四大痛点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAG-%E7%9A%84%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B"><span class="toc-text">RAG 的完整流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%9A%E6%96%87%E6%9C%AC%E5%88%86%E5%9D%97"><span class="toc-text">1. 数据预处理：文本分块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E5%A4%A7%E7%BB%8F%E5%85%B8%E5%88%86%E5%9D%97%E7%AD%96%E7%95%A5"><span class="toc-text">五大经典分块策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6%E6%96%B9%E6%A1%88%EF%BC%9A%E9%87%8D%E5%8F%A0%E5%92%8C%E6%B7%B7%E5%90%88%E7%AD%96%E7%95%A5"><span class="toc-text">进阶方案：重叠和混合策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%90%91%E9%87%8F%E5%8C%96%EF%BC%9A%E6%8A%8A%E6%96%87%E6%9C%AC%E5%8F%98%E6%88%90-AI-%E7%90%86%E8%A7%A3%E7%9A%84%E8%AF%AD%E8%A8%80"><span class="toc-text">2. 向量化：把文本变成 AI 理解的语言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84-Embedding-%E6%A8%A1%E5%9E%8B"><span class="toc-text">选择合适的 Embedding 模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A3%80%E7%B4%A2%EF%BC%9A%E6%89%BE%E5%88%B0%E7%9B%B8%E5%85%B3%E7%9A%84%E6%96%87%E6%A1%A3"><span class="toc-text">3. 检索：找到相关的文档</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E8%B7%AF%E5%8F%AC%E5%9B%9E%E7%AD%96%E7%95%A5"><span class="toc-text">多路召回策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E6%9D%83%E8%9E%8D%E5%90%88"><span class="toc-text">加权融合</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%AF%AD%E4%B9%89%E6%94%B9%E5%86%99%EF%BC%9A%E6%B6%88%E9%99%A4%E6%AD%A7%E4%B9%89%EF%BC%8C%E9%9D%A0%E8%BF%91%E6%96%87%E6%A1%A3"><span class="toc-text">4. 语义改写：消除歧义，靠近文档</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E5%A4%A7%E6%94%B9%E5%86%99%E6%8A%80%E5%B7%A7"><span class="toc-text">三大改写技巧</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%87%8D%E6%8E%92%E5%BA%8F%EF%BC%9A%E8%AE%A9%E6%9C%80%E7%9B%B8%E5%85%B3%E7%9A%84%E6%96%87%E6%A1%A3%E6%8E%92%E7%AC%AC%E4%B8%80"><span class="toc-text">5. 重排序：让最相关的文档排第一</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%E8%AF%84%E4%BC%B0%EF%BC%9A%E8%A1%A1%E9%87%8F-RAG-%E6%95%88%E6%9E%9C"><span class="toc-text">结果评估：衡量 RAG 效果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E7%B4%A2%E8%AF%84%E6%B5%8B%E7%BB%B4%E5%BA%A6"><span class="toc-text">检索评测维度</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A3%80%E7%B4%A2%E8%B4%A8%E9%87%8F%E4%B8%89%E9%97%AE"><span class="toc-text">检索质量三问</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E8%AF%84%E6%B5%8B%EF%BC%9A%E5%BF%A0%E8%AF%9A%E5%BA%A6%E5%92%8C%E7%AE%80%E6%B4%81%E5%BA%A6"><span class="toc-text">生成评测：忠诚度和简洁度</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2%E7%9A%84%E9%BB%91%E7%A7%91%E6%8A%80%EF%BC%9A%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%AE%97%E6%B3%95%E4%B8%8E%E7%B4%A2%E5%BC%95"><span class="toc-text">向量检索的黑科技：相似度算法与索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97%E4%B8%89%E5%A4%A7%E7%AE%97%E6%B3%95"><span class="toc-text">相似度计算三大算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E6%90%9C%E7%B4%A2%E5%8A%A0%E9%80%9F%EF%BC%9A%E4%BB%8E%E6%9A%B4%E5%8A%9B%E5%88%B0-ANN"><span class="toc-text">向量搜索加速：从暴力到 ANN</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E7%AE%97%E6%B3%95%EF%BC%9A%E8%8A%82%E7%9C%81%E5%86%85%E5%AD%98"><span class="toc-text">压缩算法：节省内存</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE%EF%BC%9A%E6%89%93%E9%80%A0%E9%AB%98%E8%B4%A8%E9%87%8F-RAG-%E7%B3%BB%E7%BB%9F"><span class="toc-text">实践建议：打造高质量 RAG 系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97%E6%98%AF%E5%9F%BA%E7%A1%80"><span class="toc-text">数据清洗是基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E4%B8%AA%E4%BC%98%E5%8C%96%E6%96%B9%E5%90%91"><span class="toc-text">四个优化方向</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9ARAG-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%BF%83%E6%B3%95"><span class="toc-text">总结：RAG 的核心心法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E7%9A%84%E5%BB%BA%E8%AE%AE"><span class="toc-text">最后的建议</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/" title="RAG：用检索增强生成打破大模型的知识局限">RAG：用检索增强生成打破大模型的知识局限</a><time datetime="2026-04-01T16:00:00.000Z" title="发表于 2026-04-02 00:00:00">2026-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/08/%E5%A4%A7%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="大文件上传"><img src="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/v2-93aea311db2f6f48ae7b7d961d190741_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大文件上传"/></a><div class="content"><a class="title" href="/2025/04/08/%E5%A4%A7%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="大文件上传">大文件上传</a><time datetime="2025-04-08T15:55:54.000Z" title="发表于 2025-04-08 23:55:54">2025-04-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/23/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86-CAP/" title="分布式基本原理-CAP">分布式基本原理-CAP</a><time datetime="2025-03-23T14:16:13.000Z" title="发表于 2025-03-23 22:16:13">2025-03-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/15/DDIA%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" title="DDIA第一部分"><img src="https://traveller-img.oss-cn-shenzhen.aliyuncs.com/20250305125903.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="DDIA第一部分"/></a><div class="content"><a class="title" href="/2025/02/15/DDIA%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" title="DDIA第一部分">DDIA第一部分</a><time datetime="2025-02-15T03:53:41.000Z" title="发表于 2025-02-15 11:53:41">2025-02-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/12/%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95spirng%E6%A1%86%E6%9E%B6-%E5%AE%9E%E7%8E%B0MVC/" title="手写一个简单spirng框架 实现MVC">手写一个简单spirng框架 实现MVC</a><time datetime="2024-12-12T10:55:20.000Z" title="发表于 2024-12-12 18:55:20">2024-12-12</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By 旅人</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lvren.xyz">旅人</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lvren.xyz/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/">https://lvren.xyz/2026/04/02/RAG-LLM-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lvren.xyz" target="_blank">旅人</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/AI/">AI</a><a class="post-meta__tags" href="/tags/LLM/">LLM</a><a class="post-meta__tags" href="/tags/RAG/">RAG</a><a class="post-meta__tags" href="/tags/%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93/">向量数据库</a><a class="post-meta__tags" href="/tags/%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA/">检索增强</a></div><div class="post-share"><div class="social-share" data-image="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/07/20/LangGraph%E5%85%A5%E9%97%A8-%E7%94%A8%E6%9C%89%E5%90%91%E5%9B%BE%E6%8A%8AAgent%E8%B7%91%E8%B5%B7%E6%9D%A5/" title="LangGraph 入门：用有向图把 Agent 跑起来"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">LangGraph 入门：用有向图把 Agent 跑起来</div></div><div class="info-2"><div class="info-item-1">如果你已经会用 LangChain 调模型、绑工具，但一碰到「Agent 要循环推理、要分支、要并行」就不知道怎么组织代码——LangGraph 就是为此而生的。 它不是一个 prompt 框架，而是一个编排运行时：把 Agent &#x2F; LLM 应用建模成一张有向状态图，每个节点读状态、做操作、写回状态，边决定数据往哪流。  三个关键数据结构回到 LangGraph 的核心，Everything 都可以归结为三个概念：    概念 一句话 本质    Node 数据处理的逻辑 Python 函数   Edge 决定数据流转的结构 Python 函数   State 存储数据的结构 TypedDict   Node 和 Edge 本质上都是函数——Node 接收 State 做操作，Edge 决定下一个 Node 是谁。 State 是三者中设计成本最高的：划分不好，后面加节点、加并行、加汇总都会痛苦。所以第一篇入门，第二篇就专门讲 State，不是巧合。  LangGraph 把 LLM 应用的各部分拆成节点（Node）和边（Edge）：    概念 作用    Node...</div></div></div></a><a class="pagination-related" href="/2025/04/08/%E5%A4%A7%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="大文件上传"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">大文件上传</div></div><div class="info-2"><div class="info-item-1">对于后端来说，如果文件上传的时候采用一整个上传的方式，那么后端需要在内存中留出很大一部分空间来进行一个中转。如果文件过大，那么可能会造成内存空间的拥挤，频繁的IO造成服务器性能的下降，在web这个多并发的情况下，性能的下降会导致响应时间的增加，严重甚至会导致服务的崩溃。所以我们要对大文件的上传进行专门的优化。 同时，过大的文件传输也会长时间的占用网络信道，会导致网络的拥塞，其余的服务响应时间也会增加。 总结来说，传统整文件上传面临三个核心问题：  内存压力 — 服务端需要一次性将整个文件加载到内存中，上百MB甚至GB级的文件很容易导致OOM  网络不稳定 — 传输过程中一旦网络中断，整个文件需要重新上传，用户体验极差  上传时间过长 — 单连接串行传输，无法充分利用带宽，用户等待时间长   整体方案：文件分片核心思路是：将大文件切分成多个小片段，逐片上传，最后在服务端合并还原。 我们和前端约定，在上传文件的时候，将文件切片处理，传输的时候附带有文件的唯一标识，以及文件切片数，切片标识。 在后端时，我们创建临时文件夹来存储临时切片，在前端传入的标识和切片总数达标的时候，开始在后端合...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/07/20/LangGraph%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86-State-Reducer%E4%B8%8EMessage/" title="LangGraph 状态管理：State、Reducer 与 Message"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-20</div><div class="info-item-2">LangGraph 状态管理：State、Reducer 与 Message</div></div><div class="info-2"><div class="info-item-1">建 LangGraph 的第一件事不是写节点，而是划分 State。 State 就像一块公共笔记板：prompt、历史消息、中间结果、计数器……所有节点需要共享的数据都放在这里。字段又叫 Channel。 搞懂 State 的读写规则和 Reducer 的合并逻辑，后面写复杂 Agent 才不会乱。  State 的三层视角LangGraph 允许你为不同节点定义不同的 State 视角，但底层框架为了注入和高可用，实际是把所有 State 混合在一起的。    类型 作用    InputState 约束 invoke() 的入参，调用时只填这里定义的字段   OutputState 约束 invoke() 的返回值，result = graph.invoke(...) 只能拿到这些字段   PrivateState 内部字段，不用传给 StateGraph()，框架会自动映射   几个容易误解的点：  节点 return 时，不需要严格按 OutputState 来写——只要 return 的 key 在底层混合 State 里存在，框架就会自动更新 PrivateStat...</div></div></div></a><a class="pagination-related" href="/2026/07/20/Agent%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="Agent 工作流模式与工程实践"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-20</div><div class="info-item-2">Agent 工作流模式与工程实践</div></div><div class="info-2"><div class="info-item-1">LangGraph 给了你把 Agent 建模成图的能力，但「图长什么样」仍然需要你设计。 LangChain 文档总结了五种常见的工作流模式，覆盖了从简单流水线到复杂多 Agent 协作的大部分场景。选对模式，比堆更多 prompt 有效得多。  Agent 的核心等式在聊模式之前，先对齐 Agent 是什么：  Agent &#x3D; LLM + Tools + Memory + Planning   LLM 是大脑 Tools 是手脚——描述写得好不好，直接决定 Agent 能不能正确行动 Memory 提供记忆力 Planning 决定逻辑能力  Agent loop 本质上就是一个 while 循环：推理 → 调工具 → 写回上下文 → 再推理，直到达到目标或停止。 Agent 面临的现实问题：  记忆 — 上下文窗口有限，长任务容易忘 烧 token — 每轮循环都在消耗 推理路径易失效 — 走偏了就是资源浪费   五种工作流模式1. Prompt Chaining（提示链）每步在前一步输出上增强，类似建造者模式。每步职责不同。 例子：生成小说 → 检查剧情连贯 →...</div></div></div></a><a class="pagination-related" href="/2026/07/20/LangGraph%E5%9B%BE%E7%BC%96%E6%8E%92-%E8%BE%B9-Send%E4%B8%8ECommand/" title="LangGraph 图编排：边、Send 与 Command"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-20</div><div class="info-item-2">LangGraph 图编排：边、Send 与 Command</div></div><div class="info-2"><div class="info-item-1">节点和 State 搞定之后，下一关是控制图的流转。 LangGraph 提供了三种层次的编排能力：边（Edge） 做常规路由，Send 做动态并行分发，Command 做「改状态 + 强制跳转」的特种操作。 日常开发里，90% 的路由用条件边就够了；但剩下 10% 的边界场景——工具强制收尾、中断恢复、子图交还父图——Command 是绕不开的。  边的四种形式边决定 Node 之间的连接方式，分两类 API：    类型 API 说明    普通边 add_edge(&quot;A&quot;, &quot;B&quot;) 固定从 A 到 B   普通入口 add_edge(START, &quot;A&quot;) 固定从 START 到 A   条件边 add_conditional_edges(...) 根据函数返回值选路   条件入口 add_conditional_edges(START, router, &#123;...&#125;) 根据条件决定从哪开始   条件判断函数可以返回节点名，也可以只返回 True/False，然后在 add_conditiona...</div></div></div></a><a class="pagination-related" href="/2026/07/20/LangGraph%E5%85%A5%E9%97%A8-%E7%94%A8%E6%9C%89%E5%90%91%E5%9B%BE%E6%8A%8AAgent%E8%B7%91%E8%B5%B7%E6%9D%A5/" title="LangGraph 入门：用有向图把 Agent 跑起来"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-20</div><div class="info-item-2">LangGraph 入门：用有向图把 Agent 跑起来</div></div><div class="info-2"><div class="info-item-1">如果你已经会用 LangChain 调模型、绑工具，但一碰到「Agent 要循环推理、要分支、要并行」就不知道怎么组织代码——LangGraph 就是为此而生的。 它不是一个 prompt 框架，而是一个编排运行时：把 Agent &#x2F; LLM 应用建模成一张有向状态图，每个节点读状态、做操作、写回状态，边决定数据往哪流。  三个关键数据结构回到 LangGraph 的核心，Everything 都可以归结为三个概念：    概念 一句话 本质    Node 数据处理的逻辑 Python 函数   Edge 决定数据流转的结构 Python 函数   State 存储数据的结构 TypedDict   Node 和 Edge 本质上都是函数——Node 接收 State 做操作，Edge 决定下一个 Node 是谁。 State 是三者中设计成本最高的：划分不好，后面加节点、加并行、加汇总都会痛苦。所以第一篇入门，第二篇就专门讲 State，不是巧合。  LangGraph 把 LLM 应用的各部分拆成节点（Node）和边（Edge）：    概念 作用    Node...</div></div></div></a><a class="pagination-related" href="/2026/08/13/%E4%BB%8E%E4%BE%BF%E5%88%A9%E8%B4%B4%E5%88%B0%E5%8F%AF%E5%9B%9E%E6%BB%9A%E8%AE%B0%E5%BF%86/" title="从便利贴到可回滚记忆：nanobot 记忆模块五个月演进"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-13</div><div class="info-item-2">从便利贴到可回滚记忆：nanobot 记忆模块五个月演进</div></div><div class="info-2"><div class="info-item-1">如果你做过 LLM Agent，大概都踩过「记忆」这个坑：会话一截断，刚才说的过敏、偏好、决策就没了；好不容易写进文件，模型下一次又漏写一行，等于从磁盘上删掉。 本文顺着 nanobot 的 git 历史，把记忆模块从 2026-02-01 的第一份代码讲到 2026-07 的审计改造。目标不是复述源码，而是搞清：LLM 应用里的记忆，在生产里会摔哪些跟头。 事实均来自 commit；运行现场里的具体字符串标了「还原示例」；推断会单独标明。  先记住一个用户2026-04-02 19:00，用户对助手说：  我对花生过敏，推荐食物时绝对不要含花生。  三天后他说「推荐个晚餐」。合格的记忆系统要给出不含花生的菜单，依据来自长期记忆，而不是碰巧还留在当前会话窗口里。 下面每个版本都用这一句话当探针：改完之后，磁盘上到底多了什么、少了什么、指针停在哪。  一张图看完全程     graph LR   A[&quot;2月 日记本&lt;br&#x2F;&gt;模型自己 write_file&quot;] --&gt; B[&quot;2月 两层 + JSON&quot;]   B --...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://q1.qlogo.cn/g?b=qq&amp;nk=2186840198&amp;s=640" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">旅人</div><div class="author-info-description">技术栈也是栈</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">27</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/whrgg" target="_blank" title="fab fa-github"><i class="Github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-RAG%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">为什么需要 RAG？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%9B%9B%E5%A4%A7%E7%97%9B%E7%82%B9"><span class="toc-number">1.1.</span> <span class="toc-text">大模型的四大痛点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAG-%E7%9A%84%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">RAG 的完整流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%9A%E6%96%87%E6%9C%AC%E5%88%86%E5%9D%97"><span class="toc-number">2.1.</span> <span class="toc-text">1. 数据预处理：文本分块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E5%A4%A7%E7%BB%8F%E5%85%B8%E5%88%86%E5%9D%97%E7%AD%96%E7%95%A5"><span class="toc-number">2.1.1.</span> <span class="toc-text">五大经典分块策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6%E6%96%B9%E6%A1%88%EF%BC%9A%E9%87%8D%E5%8F%A0%E5%92%8C%E6%B7%B7%E5%90%88%E7%AD%96%E7%95%A5"><span class="toc-number">2.1.2.</span> <span class="toc-text">进阶方案：重叠和混合策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%90%91%E9%87%8F%E5%8C%96%EF%BC%9A%E6%8A%8A%E6%96%87%E6%9C%AC%E5%8F%98%E6%88%90-AI-%E7%90%86%E8%A7%A3%E7%9A%84%E8%AF%AD%E8%A8%80"><span class="toc-number">2.2.</span> <span class="toc-text">2. 向量化：把文本变成 AI 理解的语言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84-Embedding-%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.2.1.</span> <span class="toc-text">选择合适的 Embedding 模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A3%80%E7%B4%A2%EF%BC%9A%E6%89%BE%E5%88%B0%E7%9B%B8%E5%85%B3%E7%9A%84%E6%96%87%E6%A1%A3"><span class="toc-number">2.3.</span> <span class="toc-text">3. 检索：找到相关的文档</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E8%B7%AF%E5%8F%AC%E5%9B%9E%E7%AD%96%E7%95%A5"><span class="toc-number">2.3.1.</span> <span class="toc-text">多路召回策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E6%9D%83%E8%9E%8D%E5%90%88"><span class="toc-number">2.3.2.</span> <span class="toc-text">加权融合</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%AF%AD%E4%B9%89%E6%94%B9%E5%86%99%EF%BC%9A%E6%B6%88%E9%99%A4%E6%AD%A7%E4%B9%89%EF%BC%8C%E9%9D%A0%E8%BF%91%E6%96%87%E6%A1%A3"><span class="toc-number">2.4.</span> <span class="toc-text">4. 语义改写：消除歧义，靠近文档</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E5%A4%A7%E6%94%B9%E5%86%99%E6%8A%80%E5%B7%A7"><span class="toc-number">2.4.1.</span> <span class="toc-text">三大改写技巧</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%87%8D%E6%8E%92%E5%BA%8F%EF%BC%9A%E8%AE%A9%E6%9C%80%E7%9B%B8%E5%85%B3%E7%9A%84%E6%96%87%E6%A1%A3%E6%8E%92%E7%AC%AC%E4%B8%80"><span class="toc-number">2.5.</span> <span class="toc-text">5. 重排序：让最相关的文档排第一</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%E8%AF%84%E4%BC%B0%EF%BC%9A%E8%A1%A1%E9%87%8F-RAG-%E6%95%88%E6%9E%9C"><span class="toc-number">3.</span> <span class="toc-text">结果评估：衡量 RAG 效果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E7%B4%A2%E8%AF%84%E6%B5%8B%E7%BB%B4%E5%BA%A6"><span class="toc-number">3.1.</span> <span class="toc-text">检索评测维度</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A3%80%E7%B4%A2%E8%B4%A8%E9%87%8F%E4%B8%89%E9%97%AE"><span class="toc-number">3.1.1.</span> <span class="toc-text">检索质量三问</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E8%AF%84%E6%B5%8B%EF%BC%9A%E5%BF%A0%E8%AF%9A%E5%BA%A6%E5%92%8C%E7%AE%80%E6%B4%81%E5%BA%A6"><span class="toc-number">3.1.2.</span> <span class="toc-text">生成评测：忠诚度和简洁度</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2%E7%9A%84%E9%BB%91%E7%A7%91%E6%8A%80%EF%BC%9A%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%AE%97%E6%B3%95%E4%B8%8E%E7%B4%A2%E5%BC%95"><span class="toc-number">4.</span> <span class="toc-text">向量检索的黑科技：相似度算法与索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E4%BC%BC%E5%BA%A6%E8%AE%A1%E7%AE%97%E4%B8%89%E5%A4%A7%E7%AE%97%E6%B3%95"><span class="toc-number">4.1.</span> <span class="toc-text">相似度计算三大算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E6%90%9C%E7%B4%A2%E5%8A%A0%E9%80%9F%EF%BC%9A%E4%BB%8E%E6%9A%B4%E5%8A%9B%E5%88%B0-ANN"><span class="toc-number">4.2.</span> <span class="toc-text">向量搜索加速：从暴力到 ANN</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E7%AE%97%E6%B3%95%EF%BC%9A%E8%8A%82%E7%9C%81%E5%86%85%E5%AD%98"><span class="toc-number">4.2.1.</span> <span class="toc-text">压缩算法：节省内存</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE%EF%BC%9A%E6%89%93%E9%80%A0%E9%AB%98%E8%B4%A8%E9%87%8F-RAG-%E7%B3%BB%E7%BB%9F"><span class="toc-number">5.</span> <span class="toc-text">实践建议：打造高质量 RAG 系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97%E6%98%AF%E5%9F%BA%E7%A1%80"><span class="toc-number">5.1.</span> <span class="toc-text">数据清洗是基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E4%B8%AA%E4%BC%98%E5%8C%96%E6%96%B9%E5%90%91"><span class="toc-number">5.2.</span> <span class="toc-text">四个优化方向</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9ARAG-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%BF%83%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">总结：RAG 的核心心法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E7%9A%84%E5%BB%BA%E8%AE%AE"><span class="toc-number">6.1.</span> <span class="toc-text">最后的建议</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/13/%E4%BB%8E%E4%BE%BF%E5%88%A9%E8%B4%B4%E5%88%B0%E5%8F%AF%E5%9B%9E%E6%BB%9A%E8%AE%B0%E5%BF%86/" title="从便利贴到可回滚记忆：nanobot 记忆模块五个月演进">从便利贴到可回滚记忆：nanobot 记忆模块五个月演进</a><time datetime="2026-08-13T08:00:00.000Z" title="发表于 2026-08-13 16:00:00">2026-08-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/20/Agent%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="Agent 工作流模式与工程实践">Agent 工作流模式与工程实践</a><time datetime="2026-07-20T05:00:00.000Z" title="发表于 2026-07-20 13:00:00">2026-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/20/LangGraph%E5%9B%BE%E7%BC%96%E6%8E%92-%E8%BE%B9-Send%E4%B8%8ECommand/" title="LangGraph 图编排：边、Send 与 Command">LangGraph 图编排：边、Send 与 Command</a><time datetime="2026-07-20T04:00:00.000Z" title="发表于 2026-07-20 12:00:00">2026-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/20/LangGraph%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86-State-Reducer%E4%B8%8EMessage/" title="LangGraph 状态管理：State、Reducer 与 Message">LangGraph 状态管理：State、Reducer 与 Message</a><time datetime="2026-07-20T03:00:00.000Z" title="发表于 2026-07-20 11:00:00">2026-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/20/LangGraph%E5%85%A5%E9%97%A8-%E7%94%A8%E6%9C%89%E5%90%91%E5%9B%BE%E6%8A%8AAgent%E8%B7%91%E8%B5%B7%E6%9D%A5/" title="LangGraph 入门：用有向图把 Agent 跑起来">LangGraph 入门：用有向图把 Agent 跑起来</a><time datetime="2026-07-20T02:00:00.000Z" title="发表于 2026-07-20 10:00:00">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By 旅人</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.6.0"></script><script src="/js/main.js?v=5.6.0"></script><div class="js-pjax"><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.innerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+
+    setTimeout(() => URL.revokeObjectURL(url), 5000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    // Clean up previous event listeners and pending frames
+    if (wrap.__mermaidAbortController) {
+      wrap.__mermaidAbortController.abort()
+      if (wrap.__mermaidRafId) cancelAnimationFrame(wrap.__mermaidRafId)
+    }
+    const ac = new AbortController()
+    wrap.__mermaidAbortController = ac
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+    // Disable default gestures to prevent scroll chaining and pinch-zoom penetration in Chrome
+    svg.style.touchAction = 'none'
+
+    // Cache BoundingClientRect, throttled on scroll to reduce reflow
+    let cachedRect = svg.getBoundingClientRect()
+    let rectDirty = false
+    const markRectDirty = () => { rectDirty = true }
+    window.addEventListener('resize', markRectDirty, { signal: ac.signal })
+    window.addEventListener('scroll', markRectDirty, { signal: ac.signal, capture: true })
+    const getRect = () => {
+      if (rectDirty) {
+        cachedRect = svg.getBoundingClientRect()
+        rectDirty = false
+      }
+      return cachedRect
+    }
+
+    // Precompute clamp bounds from initial viewBox
+    const minW = initVb[2] * 0.1
+    const maxW = initVb[2] * 10
+    const minH = initVb[3] * 0.1
+    const maxH = initVb[3] * 10
+    const clampVb = vb => {
+      const out = vb.slice()
+      out[2] = clamp(out[2], minW, maxW)
+      out[3] = clamp(out[3], minH, maxH)
+      return out
+    }
+
+    // Throttle DOM updates using requestAnimationFrame
+    let pendingVb = null
+    let rafId = null
+    const applyVb = () => {
+      if (pendingVb) {
+        wrap.__mermaidCurViewBox = pendingVb
+        setSvgViewBox(svg, pendingVb)
+        pendingVb = null
+      }
+      rafId = null
+      wrap.__mermaidRafId = null
+    }
+    const setCurVb = vb => {
+      pendingVb = clampVb(vb)
+      if (!rafId) {
+        rafId = requestAnimationFrame(applyVb)
+        wrap.__mermaidRafId = rafId
+      }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      lastPointerX: 0,
+      lastPointerY: 0
+    }
+
+    const onPointerDown = e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      const curVb = wrap.__mermaidCurViewBox
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      if (state.pointers.size === 1) {
+        state.startVb = curVb.slice()
+        state.lastPointerX = e.clientX
+        state.lastPointerY = e.clientY
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = curVb.slice()
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = state.pointers.values().next().value
+        const dxClient = p.x - state.lastPointerX
+        const dyClient = p.y - state.lastPointerY
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+        const dx = dxClient * (curVb[2] / rect.width)
+        const dy = dyClient * (curVb[3] / rect.height)
+        setCurVb([curVb[0] - dx, curVb[1] - dy, curVb[2], curVb[3]])
+        return
+      }
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const px = curVb[0] + (cx - rect.left) * (curVb[2] / rect.width)
+        const py = curVb[1] + (cy - rect.top) * (curVb[3] / rect.height)
+        setCurVb(zoomAtPoint(state.startVb, factor, px, py))
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      // Release PointerCapture to avoid event capture anomalies
+      if (svg.hasPointerCapture && svg.hasPointerCapture(e.pointerId)) {
+        svg.releasePointerCapture(e.pointerId)
+      }
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+      } else if (state.pointers.size === 1) {
+        const p = state.pointers.values().next().value
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+      }
+    }
+
+    const onWheel = e => {
+      // Prevent event bubbling from triggering external scroll
+      e.preventDefault()
+      e.stopPropagation()
+      // Normalize deltaY across deltaMode (Chrome uses pixels, Safari uses lines)
+      let delta = e.deltaY
+      if (e.deltaMode === 1) delta *= 16
+      else if (e.deltaMode === 2) delta *= 400
+
+      // Continuous zoom factor: smoother than fixed 1.1/0.9 steps
+      const zoomFactor = Math.pow(1.001, delta)
+
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      const px = curVb[0] + (e.clientX - rect.left) * (curVb[2] / rect.width)
+      const py = curVb[1] + (e.clientY - rect.top) * (curVb[3] / rect.height)
+      setCurVb(zoomAtPoint(curVb, zoomFactor, px, py))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (init) setCurVb(init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown, { signal: ac.signal })
+    svg.addEventListener('pointermove', onPointerMove, { signal: ac.signal })
+    svg.addEventListener('pointerup', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('pointercancel', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('wheel', onWheel, { passive: false, signal: ac.signal })
+    svg.addEventListener('dblclick', onDblClick, { signal: ac.signal })
+  }
+
   const runMermaid = ele => {
     window.loadMermaid = true
     const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
-
     ele.forEach((item, index) => {
       const mermaidSrc = item.firstElementChild
-      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      // Clean up event listeners before removing old SVG
+      if (item.__mermaidAbortController) {
+        item.__mermaidAbortController.abort()
+      }
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      let config = {}
+      try {
+        config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      } catch (e) {
+        console.warn('[mermaid] failed to parse dataset.config:', e)
+      }
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
       const mermaidID = `mermaid-${index}`
       const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
 
-      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
       const renderMermaid = svg => {
         mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (true) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (true) attachMermaidViewerButton(item)
       }
 
-      // mermaid v9 and v10 compatibility
-      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+      const handleError = err => {
+        console.error(`[mermaid] render failed for block #${index}:`, err)
+        const errorEl = document.createElement('div')
+        errorEl.className = 'mermaid-error'
+        errorEl.textContent = `Mermaid render error: ${err.message || err}`
+        mermaidSrc.insertAdjacentElement('afterend', errorEl)
+      }
+
+      try {
+        const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+        // mermaid v9 and v10 compatibility
+        if (typeof renderFn === 'string') {
+          renderMermaid(renderFn)
+        } else {
+          renderFn.then(({ svg }) => renderMermaid(svg)).catch(handleError)
+        }
+      } catch (err) {
+        handleError(err)
+      }
     })
   }
 
-  const codeToMermaid = () => {
-    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+  const codeToMermaid = $article => {
+    const codeMermaidEle = $article.querySelectorAll('pre > code.mermaid')
     if (codeMermaidEle.length === 0) return
 
     codeMermaidEle.forEach(ele => {
@@ -543,13 +942,16 @@
   }
 
   const loadMermaid = () => {
-    if (true) codeToMermaid()
-    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    const $article = document.getElementById('article-container')
+    if (!$article) return
+
+    if (false) codeToMermaid($article)
+    const $mermaid = $article.querySelectorAll('.mermaid-wrap')
     if ($mermaid.length === 0) return
 
     const runMermaidFn = () => runMermaid($mermaid)
     btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
-    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.16.0/dist/mermaid.min.js').then(runMermaidFn)
   }
 
   btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
