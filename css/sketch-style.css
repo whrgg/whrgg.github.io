@@ -288,6 +288,10 @@ code, kbd, pre, samp,
   background-color: var(--sketch-dark);
 }
 
+#page-header.full_page {
+  background-image: url(/img/beijing.jpg);
+}
+
 #page-header #site-title {
   font-style: italic;
   color: var(--sketch-paper);
