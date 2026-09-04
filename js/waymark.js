@@ -178,11 +178,35 @@
     render()
   }
 
+  const COVER_SEL = '.relatedPosts-list .cover, #pagination.pagination-post .cover'
+
+  const hasSpecifiedImage = el => {
+    if (el.matches('img[src]')) {
+      const src = (el.getAttribute('src') || '').trim()
+      if (src && !/friend_404|deflaut|default-bg/i.test(src)) return true
+    }
+    const style = el.getAttribute('style') || ''
+    const urls = [...style.matchAll(/url\(\s*(['"]?)([^)'"]+?)\1\s*\)/gi)].map(m => m[2].trim())
+    return urls.some(url => url && url !== 'none' && !url.startsWith('var('))
+  }
+
+  const applyCoverDefaults = () => {
+    document.querySelectorAll(COVER_SEL).forEach(el => {
+      el.classList.remove('cover-fallback')
+      if (hasSpecifiedImage(el)) return
+      el.classList.add('cover-fallback')
+      el.style.removeProperty('background')
+      el.style.removeProperty('background-image')
+      el.style.removeProperty('background-color')
+    })
+  }
+
   const boot = () => {
     document.querySelectorAll('.card-waymark').forEach(mount)
     document.querySelectorAll('#footer .copyright').forEach(el => {
       el.innerHTML = '&copy;2022 - 2026 By 旅人'
     })
+    applyCoverDefaults()
   }
 
   const copyText = async text => {
@@ -224,4 +248,5 @@
   } else {
     boot()
   }
+  document.addEventListener('pjax:complete', applyCoverDefaults)
 })()

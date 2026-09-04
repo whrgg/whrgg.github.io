@@ -288,6 +288,29 @@ code, kbd, pre, samp,
   background-color: var(--sketch-dark);
 }
 
+#page-header.post-bg {
+  background-image: url(/img/shenzi.png);
+}
+
+.relatedPosts-list > a:nth-child(odd) .cover.cover-fallback,
+#pagination.pagination-post > a:nth-child(odd) .cover.cover-fallback {
+  background-image: url(/img/shenzi.png);
+  background-size: cover;
+  background-position: center;
+}
+
+.relatedPosts-list > a:nth-child(even) .cover.cover-fallback,
+#pagination.pagination-post > a:nth-child(even) .cover.cover-fallback {
+  background-image: url(/img/ke.jpg);
+  background-size: cover;
+  background-position: center;
+}
+
+.relatedPosts-list .cover,
+#pagination.pagination-post .cover {
+  opacity: 0.55;
+}
+
 #page-header.full_page {
   background-image: url(/img/beijing.jpg);
 }
