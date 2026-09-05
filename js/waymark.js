@@ -178,7 +178,7 @@
     render()
   }
 
-  const COVER_SEL = '.relatedPosts-list .cover, #pagination.pagination-post .cover'
+  const DEFAULT_COVERS = ['/img/shenzi.jpg', '/img/ke.jpg']
 
   const hasSpecifiedImage = el => {
     if (el.matches('img[src]')) {
@@ -191,14 +191,23 @@
   }
 
   const applyCoverDefaults = () => {
-    document.querySelectorAll(COVER_SEL).forEach(el => {
-      el.classList.remove('cover-fallback')
-      if (hasSpecifiedImage(el)) return
-      el.classList.add('cover-fallback')
-      el.style.removeProperty('background')
-      el.style.removeProperty('background-image')
-      el.style.removeProperty('background-color')
-    })
+    const header = document.getElementById('page-header')
+    if (header && header.classList.contains('post-bg') && !hasSpecifiedImage(header)) {
+      header.style.backgroundImage = 'url(/img/shenzi.jpg)'
+    }
+
+    const paintList = selector => {
+      document.querySelectorAll(selector).forEach((el, i) => {
+        if (hasSpecifiedImage(el)) return
+        el.classList.add('cover-fallback')
+        el.style.backgroundImage = `url(${DEFAULT_COVERS[i % 2]})`
+        el.style.backgroundSize = 'cover'
+        el.style.backgroundPosition = 'center'
+      })
+    }
+
+    paintList('.relatedPosts-list .cover')
+    paintList('#pagination.pagination-post .cover')
   }
 
   const boot = () => {

@@ -289,12 +289,12 @@ code, kbd, pre, samp,
 }
 
 #page-header.post-bg {
-  background-image: url(/img/shenzi.png);
+  background-image: url(/img/shenzi.jpg);
 }
 
 .relatedPosts-list > a:nth-child(odd) .cover.cover-fallback,
 #pagination.pagination-post > a:nth-child(odd) .cover.cover-fallback {
-  background-image: url(/img/shenzi.png);
+  background-image: url(/img/shenzi.jpg);
   background-size: cover;
   background-position: center;
 }
