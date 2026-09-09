@@ -1,0 +1,16 @@
+{
+  "name": "lvren.xyz static site",
+  "terminals": [
+    {
+      "name": "static-server",
+      "command": "python3 -m http.server 4000 --bind 0.0.0.0",
+      "description": "Serves the prebuilt Hexo site from the repo root at http://localhost:4000 (root-absolute asset paths require serving from the site root)."
+    }
+  ],
+  "ports": [
+    {
+      "name": "web",
+      "port": 4000
+    }
+  ]
+}
